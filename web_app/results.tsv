@@ -1,2 +1,10 @@
 commit	page_load_ms	render_latency_ms	status	description
-9938b41	1096.96	3.82	keep	baseline
+76bf431	1077.31	3.50	keep	baseline (local static server)
+702cd2c	1078.98	2.84	keep	React.memo GraphNode component
+97b216a	1070.88	3.07	keep	CSS grid background, remove 75 SVG line nodes
+98617e1	1065.86	2.92	keep	chunk-split vendor libs (react/icons/axios)
+n/a	1075.84	2.36	discard	lucide subpath imports - hurt page_load
+n/a	1072.83	2.33	discard	esbuild+es2020 minify - page_load noise regression
+n/a	1085.13	2.47	discard	startTransition on setStatus - overhead in headless
+n/a	1082.78	3.10	discard	drawnEdgesRef - local Set faster than ref
+n/a	1113.55	3.41	discard	replace axios with fetch - lost parallel chunk benefit
