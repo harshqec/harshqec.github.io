@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, MouseEvent } from 'react';
+import React, { useState, useRef, useCallback, memo } from 'react';
 import axios from 'axios';
 import { 
   PlusCircle, PlusSquare, Move, Link as LinkIcon, 
@@ -9,6 +9,28 @@ import {
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
+
+// Memoized SVG node — only re-renders when its own props change
+const GraphNode = memo(({ id, x, y, type, selected, RADIUS, onNodeClick, onPointerDown }) => {
+  const sColor = selected ? "#FFF" : "none";
+  const sWidth = selected ? 3 : 0;
+  return (
+    <g
+      className="node node-group"
+      data-selected={selected}
+      transform={`translate(${x}, ${y})`}
+      onClick={(e) => onNodeClick(e, id)}
+      onPointerDown={(e) => onPointerDown(e, id)}
+    >
+      {type === 'cluster' ? (
+        <circle cx="0" cy="0" r={RADIUS} fill="var(--node-cluster)" stroke={sColor} strokeWidth={sWidth} />
+      ) : (
+        <rect x={-RADIUS} y={-RADIUS} width={RADIUS * 2} height={RADIUS * 2} rx="6" fill="var(--node-message)" stroke={sColor} strokeWidth={sWidth} />
+      )}
+      <text className="node-text">{id}</text>
+    </g>
+  );
+});
 
 const API_URL = 'http://127.0.0.1:5000/api/compute';
 
@@ -459,30 +481,20 @@ export default function App() {
               })
             ))}
 
-            {/* Nodes */}
-            {Object.entries(nodes).map(([id, n]) => {
-              const selected = selectedNode === id;
-              const sColor = selected ? "#FFF" : "none";
-              const sWidth = selected ? 3 : 0;
-              
-              return (
-                <g 
-                  key={id} 
-                  className="node node-group" 
-                  data-selected={selected}
-                  transform={`translate(${n.x}, ${n.y})`}
-                  onClick={(e) => handleNodeClick(e, id)}
-                  onPointerDown={(e) => handlePointerDown(e, id)}
-                >
-                  {n.type === 'cluster' ? (
-                    <circle cx="0" cy="0" r={RADIUS} fill="var(--node-cluster)" stroke={sColor} strokeWidth={sWidth} />
-                  ) : (
-                    <rect x={-RADIUS} y={-RADIUS} width={RADIUS*2} height={RADIUS*2} rx="6" fill="var(--node-message)" stroke={sColor} strokeWidth={sWidth} />
-                  )}
-                  <text className="node-text">{id}</text>
-                </g>
-              );
-            })}
+            {/* Nodes — memoized, skip re-render if props unchanged */}
+            {Object.entries(nodes).map(([id, n]) => (
+              <GraphNode
+                key={id}
+                id={id}
+                x={n.x}
+                y={n.y}
+                type={n.type}
+                selected={selectedNode === id}
+                RADIUS={RADIUS}
+                onNodeClick={handleNodeClick}
+                onPointerDown={handlePointerDown}
+              />
+            ))}
           </svg>
         </div>
 
