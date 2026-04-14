@@ -381,17 +381,7 @@ export default function App() {
     setStatus("Results successfully saved to JSON.");
   };
 
-  // ------------------------------------
-  // Drawing Helpers
-  // ------------------------------------
-  const renderGrid = () => {
-    const lines = [];
-    for(let i=0; i<1500; i+=40) {
-      lines.push(<line key={`v${i}`} x1={i} y1={0} x2={i} y2={1000} stroke="rgba(255,255,255,0.05)" strokeWidth={1} />);
-      lines.push(<line key={`h${i}`} x1={0} y1={i} x2={1500} y2={i} stroke="rgba(255,255,255,0.05)" strokeWidth={1} />);
-    }
-    return lines;
-  };
+  // Grid removed: CSS background-image handles this with zero DOM nodes
 
   const drawnEdges = new Set();
 
@@ -449,7 +439,7 @@ export default function App() {
       </header>
 
       <div className="workspace">
-        <div className="canvas-container glass-panel">
+        <div className="canvas-container glass-panel" style={{backgroundImage: 'repeating-linear-gradient(rgba(255,255,255,0.05) 0 1px, transparent 1px 40px), repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 40px)', backgroundSize: '40px 40px'}}>
           <svg 
             ref={svgRef} 
             onClick={handleSvgClick}
@@ -457,7 +447,6 @@ export default function App() {
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
           >
-            {renderGrid()}
             
             {/* Marged C-C Edges */}
             {Object.entries(clusterConnections).map(([c1, nbs]) => (
