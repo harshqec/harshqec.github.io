@@ -413,12 +413,6 @@ export default function App() {
         </div>
 
         <div className="toolbar-group">
-          Target d:
-          <input 
-            type="number" 
-            value={distance} 
-            onChange={(e) => setDistance(e.target.value)} 
-          />
           <button className="primary shadow-lg ml-2" onClick={generateMatrices}>
             <Play size={16} /> Generate Matrices
           </button>
