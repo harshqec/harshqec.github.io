@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh | PhD Student - Quantum Computing</title>
+    <meta name="description"
+        content="Personal academic website of Harsh, PhD Student in Quantum Computing, specializing in cluster states and topologic UI visualization.">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+
+<body>
+    <canvas id="quantum-bg"></canvas>
+    <div class="container">
+        <header>
+            <div class="logo">Harsh<span>.</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#news">Updates</a></li>
+                    <li><a href="#lab">Interactive Lab</a></li>
+                    <li><a href="#research">Research</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero page-section" id="about">
+                <div class="hero-text">
+                    <h1>Hi, I'm Harsh.</h1>
+                    <h2>PhD Student in Quantum Computing</h2>
+                    <p>
+                        Engineer with a passion for mathematics and music, and nearly two
+                        years of experience at Infosys. I hold an M.Tech in Microelectronics
+                        and am currently pursuing a Ph.D. in quantum error correction using measurement-based quantum
+                        computing, where every bit matters, even in a qubit.
+                    </p>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary" aria-label="Download CV">Download CV</a>
+                        <a href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ" target="_blank"
+                            class="btn btn-secondary" aria-label="View Google Scholar">Google Scholar &rarr;</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="headshot.png" alt="Headshot of Harsh standing in a modern university facility">
+                </div>
+            </section>
+
+            <!-- News Section -->
+            <section id="news" class="page-section">
+                <h3 class="section-title">Latest Updates</h3>
+                <ul class="news-list">
+                    <li class="news-item">
+                        <div class="news-date">March 2026</div>
+                        <div class="news-content">
+                            Presented research at the <strong>EECS Symposium, IISER Bhopal</strong>, on the topic of
+                            fault-tolerant syndrome extraction in [[n, 1, 3]] graph codes.
+                        </div>
+                    </li>
+                    <li class="news-item">
+                        <div class="news-date">Nov 2025</div>
+                        <div class="news-content">
+                            Preprint updated on arXiv: "Fault-tolerant syndrome extraction in [[n,1,3]] non-CSS code
+                            family generated using measurements on graph states."
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Interactive Lab Section -->
+            <section id="lab" class="page-section">
+                <h3 class="section-title">Interactive Lab</h3>
+                <p class="sandbox-desc">
+                    A specialized tool designed to generate graph codes using graph states.
+                    It provides real-time calculations for code distance and offers an
+                    interactive canvas for hands-on experimentation with quantum topologies.
+                </p>
+                <div class="launch-card">
+                    <div class="card-content">
+                        <h4>Interactive Lab</h4>
+                        <p>Generate, visualize, and analyze graph code distances in real-time.</p>
+                        <a href="qmatrix/index.html" class="btn btn-primary">Launch Interactive Lab</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Research & Publications Section -->
+            <section id="research" class="page-section">
+                <h3 class="section-title">Research Spotlight</h3>
+                <div class="pub-grid">
+
+                    <!-- Project 1 -->
+                    <article class="pub-card">
+                        <h4 class="pub-title">Fault-tolerant syndrome extraction in [[n,1,3]] non-CSS codes</h4>
+                        <div class="pub-venue">ArXiv Preprint, 2025</div>
+                        <p class="pub-summary">
+                            Investigates the construction of bare codes generated using measurements on graph states.
+                            Focuses on reducing hardware overhead for near-term fault-tolerant quantum error correction.
+                        </p>
+                        <div class="pub-links">
+                            <a href="#" class="pub-link">Preprint</a>
+                            <a href="#" class="pub-link">PDF</a>
+                        </div>
+                    </article>
+
+                    <!-- Project 2 -->
+                    <article class="pub-card">
+                        <h4 class="pub-title">Interactive Topological Visualization for MBQC</h4>
+                        <div class="pub-venue">EECS Symposium, IISER Bhopal</div>
+                        <p class="pub-summary">
+                            A software suite designed for real-time visualization and manipulation of complex cluster
+                            state graphs,
+                            bridging the gap between MBQC mathematics and intuitive UI.
+                        </p>
+                        <div class="pub-links">
+                            <a href="qmatrix/index.html" class="pub-link">Live Demo</a>
+                            <a href="https://github.com/harshqec" target="_blank" class="pub-link">Code</a>
+                        </div>
+                    </article>
+
+                    <!-- Project 3 -->
+                    <article class="pub-card">
+                        <h4 class="pub-title">Bare Code Construction for Near-Term Hardware</h4>
+                        <div class="pub-venue">Ongoing Research</div>
+                        <p class="pub-summary">
+                            Investigating minimal-overhead error correction schemes suitable for pre-threshold quantum
+                            devices
+                            using optimized measurement patterns on cluster states.
+                        </p>
+                        <div class="pub-links">
+                            <span class="pub-link-static">Manuscript in Prep</span>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <!-- Contact Page Section -->
+            <section id="contact" class="page-section">
+                <h3 class="section-title">Get in Touch</h3>
+                <div class="contact-container">
+                    <!-- Large Social Board -->
+                    <div class="contact-board">
+                        <div class="board-item">
+                            <!-- <span class="board-label">Direct Email</span> -->
+                            <a href="mailto:harsh22@iiserb.ac.in" class="board-link">harsh22@iiserb.ac.in</a>
+                        </div>
+                        <div class="board-item">
+                            <!-- <span class="board-label">Professional Network</span> -->
+                            <a href="https://www.linkedin.com/in/harsh-gupta-aa3bbb99/" target="_blank"
+                                class="board-link">LinkedIn</a>
+                        </div>
+                        <div class="board-item">
+                            <!-- <span class="board-label">Open Source</span> -->
+                            <a href="https://github.com/harshqec" target="_blank" class="board-link">GitHub</a>
+                        </div>
+                        <div class="board-item">
+                            <!-- <span class="board-label">Research ID</span> -->
+                            <a href="https://orcid.org/0009-0000-0507-4146" target="_blank" class="board-link">ORCID</a>
+                        </div>
+                    </div>
+
+                    <!-- Message Box -->
+                    <div class="contact-form-container">
+                        <h4>Send a Message</h4>
+                        <form id="contact-form" action="https://formspree.io/f/xgorvznp" method="POST">
+                            <div class="form-group">
+                                <label for="form-name">Full Name</label>
+                                <input type="text" id="form-name" name="name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="form-email">Your Email</label>
+                                <input type="email" id="form-email" name="_replyto" placeholder="yourname@email.com"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="form-message">Message</label>
+                                <textarea id="form-message" name="message" placeholder="How can I help you?" rows="5"
+                                    required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                            <p id="form-status" style="margin-top: 10px; font-weight: 500;"></p>
+                            <p class="form-note">Powered by Formspree. I usually reply within 24 hours.</p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Minimal Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#news">Updates</a>
+                <a href="#research">Research</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p>&copy; 2026 Harsh. Designed for the Quantum era.</p>
+        </footer>
+    </div>
+
+    <script src="quantum-bg.js?v=2"></script>
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>
