@@ -7,11 +7,14 @@
     <title>Harsh | PhD Student - Quantum Computing</title>
     <meta name="description"
         content="Personal academic website of Harsh, PhD Student in Quantum Computing, specializing in cluster states and topologic UI visualization.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
-    <canvas id="quantum-bg"></canvas>
+    <canvas id="quantum-bg" aria-hidden="true"></canvas>
     <div class="container">
         <header>
             <div class="logo">Harsh<span>.</span></div>
@@ -40,7 +43,7 @@
                     </p>
                     <div class="btn-group">
                         <a href="#" class="btn btn-primary" aria-label="Download CV">Download CV</a>
-                        <a href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ" target="_blank"
+                        <a href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ" target="_blank" rel="noopener noreferrer"
                             class="btn btn-secondary" aria-label="View Google Scholar">Google Scholar &rarr;</a>
                     </div>
                 </div>
@@ -117,7 +120,7 @@
                         </p>
                         <div class="pub-links">
                             <a href="qmatrix/index.html" class="pub-link">Live Demo</a>
-                            <a href="https://github.com/harshqec" target="_blank" class="pub-link">Code</a>
+                            <a href="https://github.com/harshqec" target="_blank" rel="noopener noreferrer" class="pub-link">Code</a>
                         </div>
                     </article>
 
@@ -150,16 +153,16 @@
                         </div>
                         <div class="board-item">
                             <!-- <span class="board-label">Professional Network</span> -->
-                            <a href="https://www.linkedin.com/in/harsh-gupta-aa3bbb99/" target="_blank"
+                            <a href="https://www.linkedin.com/in/harsh-gupta-aa3bbb99/" target="_blank" rel="noopener noreferrer"
                                 class="board-link">LinkedIn</a>
                         </div>
                         <div class="board-item">
                             <!-- <span class="board-label">Open Source</span> -->
-                            <a href="https://github.com/harshqec" target="_blank" class="board-link">GitHub</a>
+                            <a href="https://github.com/harshqec" target="_blank" rel="noopener noreferrer" class="board-link">GitHub</a>
                         </div>
                         <div class="board-item">
                             <!-- <span class="board-label">Research ID</span> -->
-                            <a href="https://orcid.org/0009-0000-0507-4146" target="_blank" class="board-link">ORCID</a>
+                            <a href="https://orcid.org/0009-0000-0507-4146" target="_blank" rel="noopener noreferrer" class="board-link">ORCID</a>
                         </div>
                     </div>
 
@@ -202,8 +205,8 @@
         </footer>
     </div>
 
-    <script src="quantum-bg.js?v=2"></script>
-    <script src="app.js?v=2"></script>
+    <script src="quantum-bg.js?v=2" defer></script>
+    <script src="app.js?v=2" defer></script>
 </body>
 
 </html>
