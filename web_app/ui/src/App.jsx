@@ -72,6 +72,11 @@ export default function App() {
     const { x, y } = getCanvasCoords(e);
 
     if (mode === 'add_cluster') {
+      const currentClusterCount = Object.values(nodes).filter(n => n.type === 'cluster').length;
+      if (currentClusterCount >= 12) {
+        setStatus("Error: Maximum limit of 12 cluster nodes reached.");
+        return;
+      }
       const id = `c${clusterCounter + 1}`;
       setClusterCounter(prev => prev + 1);
       setNodes(prev => ({ ...prev, [id]: { type: 'cluster', x, y } }));
