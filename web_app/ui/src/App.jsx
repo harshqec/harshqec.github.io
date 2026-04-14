@@ -372,7 +372,7 @@ export default function App() {
              &larr; Home
           </a>
           <div className="separator" style={{height: '24px', margin: '0 12px'}} />
-          <div className="font-bold text-lg mr-4">Q-Matrix UI</div>
+          <div className="font-bold text-lg mr-4">Graph Code Editor</div>
           
           <button className={classNames(mode === 'add_cluster' && 'active-mode')} onClick={() => handleModeChange('add_cluster')}>
             <PlusCircle size={16} /> Cluster
