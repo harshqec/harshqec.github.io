@@ -226,22 +226,13 @@ export default function App() {
   const formatResult = (res) => {
     let out = [];
     out.push("-".repeat(40));
-    out.push("STABILIZER OPERATORS:");
+    out.push("STABILIZER GENERATORS:");
     (res.stabilizer_operators || []).forEach(op => out.push(`  ${op}`));
     
     if (res.distance !== undefined) {
-      out.push(`\nDISTANCE: ${res.distance}`);
+      out.push(`\nMINIMUM DISTANCE: ${res.distance}`);
     }
     
-    out.push("\nLOGICAL Xs:");
-    (res.logical_Xs_stab || []).forEach(op => out.push(`  ${op}`));
-    
-    out.push("\nLOGICAL Zs:");
-    (res.logical_Zs_stab || []).forEach(op => out.push(`  ${op}`));
-    
-    if (res["What code it is"]) {
-      out.push(`\nCODE TYPE: ${res["What code it is"]}`);
-    }
     out.push("-".repeat(40));
     return out.join('\n');
   };
@@ -295,17 +286,8 @@ export default function App() {
       
       let lines = [];
       lines.push("");
-      lines.push(`A_cc shape = (${data.A_cc_shape.join(', ')})`);
-      lines.push("A_cc =");
+      lines.push("Adjacency Matrix of Cluster Nodes (A_cc):");
       lines.push(matrixToString(data.A_cc));
-      lines.push("");
-      lines.push(`A_cm shape = (${data.A_cm_shape.join(', ')})`);
-      lines.push("A_cm =");
-      lines.push(matrixToString(data.A_cm));
-      lines.push("");
-      lines.push(`H shape = (${data.H_shape.join(', ')})`);
-      lines.push("H =");
-      lines.push(matrixToString(data.H));
       lines.push("");
 
       if (data.k === 0) {
@@ -314,19 +296,16 @@ export default function App() {
         setStatus("Matrices generated. Add message node to compute stabilizers.");
       } else {
         if (data.results && data.results.length > 0) {
-          lines.push(`RESULTS:`);
-          lines.push("Parity check matrix (H) =");
+          lines.push("Parity Check Matrix:");
           lines.push(matrixToString(data.parity_check_matrix));
           lines.push("");
           data.results.forEach((r, idx) => {
-            lines.push(`Result #${idx + 1}:`);
             lines.push(formatResult(r));
             lines.push("");
           });
           setStatus("Matrices and stabilizer results generated.");
         } else if (data.single_result) {
-          lines.push("COMPUTED OUTPUT:");
-          lines.push("Parity check matrix (H) =");
+          lines.push("Parity Check Matrix:");
           lines.push(matrixToString(data.parity_check_matrix));
           lines.push("");
           lines.push(formatResult(data.single_result));
