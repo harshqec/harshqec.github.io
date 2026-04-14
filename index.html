@@ -251,18 +251,21 @@
 
                     <div class="gallery-grid">
                         <figure class="gallery-item">
-                            <a href="images/iisc_prof_1_full.webp" target="_blank" title="Click to see high-resolution original">
+                            <a href="images/iisc_prof_1_full.webp" class="lightbox-trigger" title="Click to see high-resolution original">
                                 <img src="images/iisc_prof_1_thumb.webp" alt="Harsh with Prof. Shayan Garani" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
                             </a>
                         </figure>
                         <figure class="gallery-item">
-                            <a href="images/iisc_prof_2_full.webp" target="_blank" title="Click to see high-resolution original">
+                            <a href="images/iisc_prof_2_full.webp" class="lightbox-trigger" title="Click to see high-resolution original">
                                 <img src="images/iisc_prof_2_thumb.webp" alt="Visit to Ujjain with Prof. Shayan Garani" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
                             </a>
                         </figure>
                         <figure class="gallery-item">
-                            <a href="images/iisc_prof_3_full.webp" target="_blank" title="Click to see high-resolution original">
+                            <a href="images/iisc_prof_3_full.webp" class="lightbox-trigger" title="Click to see high-resolution original">
                                 <img src="images/iisc_prof_3_thumb.webp" alt="Memories from the Ujjain trip" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
                             </a>
                         </figure>
                     </div>
@@ -281,6 +284,16 @@
             </div>
             <p>&copy; 2026 Harsh. Designed for the Quantum era.</p>
         </footer>
+    </div>
+
+    <!-- Custom Lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+        <button class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+        <button class="lightbox-prev" aria-label="Previous Image">&larr;</button>
+        <button class="lightbox-next" aria-label="Next Image">&rarr;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Full resolution view">
+        </div>
     </div>
 
     <script src="quantum-bg.js?v=2" defer></script>

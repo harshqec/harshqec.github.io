@@ -118,6 +118,73 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Lightbox Logic ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.querySelector('.lightbox-close');
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    
+    let galleryImages = [];
+    let currentIndex = 0;
+
+    function openLightbox(index, images) {
+        galleryImages = images;
+        currentIndex = index;
+        lightboxImg.src = galleryImages[currentIndex];
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeLightbox() {
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = 'auto';
+        lightboxImg.src = ''; // Clear src
+    }
+
+    function showNext() {
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex];
+    }
+
+    function showPrev() {
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex];
+    }
+
+    // Event listener for gallery clicks (delegated)
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.lightbox-trigger');
+        if (trigger) {
+            e.preventDefault();
+            // Find all triggers in the same gallery container
+            const container = trigger.closest('.gallery-grid');
+            const siblingTriggers = Array.from(container.querySelectorAll('.lightbox-trigger'));
+            const images = siblingTriggers.map(t => t.getAttribute('href'));
+            const index = siblingTriggers.indexOf(trigger);
+            
+            openLightbox(index, images);
+        }
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
+    
+    // Close on backdrop click
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.getAttribute('aria-hidden') === 'false') {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') showNext();
+            if (e.key === 'ArrowLeft') showPrev();
+        }
+    });
+
     // Initial Load
     const initialHash = window.location.hash.substring(1) || 'about';
     switchPage(initialHash);
