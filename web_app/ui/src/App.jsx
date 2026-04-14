@@ -26,6 +26,7 @@ export default function App() {
   const [distance, setDistance] = useState(2);
   const [terminalOutput, setTerminalOutput] = useState('Ready to compute matrices...\n\nDraw your parity check graph on the left and click Generate Matrices.');
   const [status, setStatus] = useState('Mode: Move nodes');
+  const [lastData, setLastData] = useState(null);
   
   const svgRef = useRef(null);
   
@@ -290,6 +291,8 @@ export default function App() {
       const response = await axios.post(API_URL, payload);
       const data = response.data;
       
+      setLastData({ request: payload, response: data });
+      
       let lines = [];
       lines.push("");
       lines.push(`A_cc shape = (${data.A_cc_shape.join(', ')})`);
@@ -348,6 +351,33 @@ export default function App() {
     setTerminalOutput('');
     setStatus('Cleared all.');
     setSelectedNode(null);
+    setLastData(null);
+  };
+
+  const handleSaveJson = () => {
+    if (!lastData) {
+      setStatus("Error: Generate matrices first before saving.");
+      return;
+    }
+    const exportData = {
+      graph: {
+        nodes,
+        clusterConnections,
+        messageConnections
+      },
+      computedData: lastData
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `graph_code_results_${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setStatus("Results successfully saved to JSON.");
   };
 
   // ------------------------------------
@@ -412,6 +442,9 @@ export default function App() {
           />
           <button className="primary shadow-lg ml-2" onClick={generateMatrices}>
             <Play size={16} /> Generate Matrices
+          </button>
+          <button onClick={handleSaveJson} className="ml-2" title="Save Results to JSON">
+            <Save size={16} /> Save JSON
           </button>
           <div className="separator" />
           <button onClick={clearAll} title="Clear All">
