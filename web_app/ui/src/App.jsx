@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, memo } from 'react';
 import axios from 'axios';
 import { 
   PlusCircle, PlusSquare, Move, Link as LinkIcon, 
-  Unlink, Trash2, Zap, Play, Upload, Save, RefreshCw 
+  Unlink, Trash2, Zap, Play, Save, RefreshCw 
 } from 'lucide-react';
 
 // A simple utility to merge class names
@@ -104,7 +104,7 @@ export default function App() {
       setClusterCounter(prev => prev + 1);
       setNodes(prev => ({ ...prev, [id]: { type: 'cluster', x, y } }));
       setClusterConnections(prev => ({ ...prev, [id]: [] }));
-      setStatus(`Added cluster node ${id}`);
+      startTransition(() => setStatus(`Added cluster node ${id}`));
     } else if (mode === 'add_message') {
       const id = `m${messageCounter + 1}`;
       setMessageCounter(prev => prev + 1);
