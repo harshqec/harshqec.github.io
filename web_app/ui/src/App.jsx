@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, memo } from 'react';
-import axios from 'axios';
+import { computeMatrices } from './math_logic.js';
 import { 
   PlusCircle, PlusSquare, Move, Link as LinkIcon, 
   Unlink, Trash2, Zap, Play, Save, RefreshCw 
@@ -32,7 +32,7 @@ const GraphNode = memo(({ id, x, y, type, selected, RADIUS, onNodeClick, onPoint
   );
 });
 
-const API_URL = 'http://127.0.0.1:5000/api/compute';
+// Computation is now performed entirely in-browser via math_logic.js
 
 export default function App() {
   const [nodes, setNodes] = useState({});
@@ -286,14 +286,14 @@ export default function App() {
     return { cluster_connections: cDict, message_connections: mDict };
   };
 
-  const generateMatrices = async () => {
+  const generateMatrices = () => {
     if (Object.keys(clusterConnections).length === 0) {
       setStatus("Error: Add at least one cluster node first.");
       return;
     }
     
     setTerminalOutput('Computing matrices...');
-    setStatus('Sending request to Python engine...');
+    setStatus('Running in-browser quantum engine...');
 
     const payload = {
       ...mapConnectionsAPI(),
@@ -301,8 +301,7 @@ export default function App() {
     };
 
     try {
-      const response = await axios.post(API_URL, payload);
-      const data = response.data;
+      const data = computeMatrices(payload);
       
       setLastData({ request: payload, response: data });
       
@@ -321,7 +320,7 @@ export default function App() {
           lines.push("Parity Check Matrix:");
           lines.push(matrixToString(data.parity_check_matrix));
           lines.push("");
-          data.results.forEach((r, idx) => {
+          data.results.forEach((r) => {
             lines.push(formatResult(r));
             lines.push("");
           });
@@ -337,7 +336,7 @@ export default function App() {
       
       setTerminalOutput(lines.join("\n"));
     } catch (err) {
-      const errMsg = err.response?.data?.error || err.message;
+      const errMsg = err.message || String(err);
       setTerminalOutput(`Error computing matrices:\n${errMsg}`);
       setStatus(`Failed: ${errMsg}`);
     }
