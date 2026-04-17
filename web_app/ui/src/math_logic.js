@@ -219,11 +219,28 @@ function hxClusterMat(n, k) {
 // (Python: process_matrix)
 // =========================================================
 
-function processMatrix(hxIn, hzIn, k) {
+function processMatrix(hxIn, hzIn, k, pivotNodes = null) {
   // rowSize is fixed to the initial number of rows (= n)
   const rowSize = hxIn.length;
   let hx = clone2D(hxIn);
   let hz = clone2D(hzIn);
+
+  let normalizedPivots = null;
+  if (pivotNodes == null) {
+    normalizedPivots = new Array(k).fill(null);
+  } else {
+    if (!Array.isArray(pivotNodes) || pivotNodes.length !== k) {
+      throw new Error(`pivot_nodes must be an array with exactly ${k} entries.`);
+    }
+    normalizedPivots = pivotNodes.map((value, idx) => {
+      if (value == null) return null;
+      const parsed = Number(value);
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed >= rowSize) {
+        throw new Error(`pivot_nodes[${idx}] is invalid. Use a cluster index in range 0..${Math.max(rowSize - 1, 0)} or null.`);
+      }
+      return parsed;
+    });
+  }
 
   const lxList = [];
   const lzList = [];
@@ -231,7 +248,7 @@ function processMatrix(hxIn, hzIn, k) {
   for (let p = 0; p < k; p++) {
     // Find rows where last column of hz == 1
     const lastCol = hz[0].length - 1;
-    const pos = [];
+    let pos = [];
     for (let r = 0; r < hz.length; r++) {
       if (hz[r][lastCol] === 1) pos.push(r);
     }
@@ -240,6 +257,21 @@ function processMatrix(hxIn, hzIn, k) {
       throw new Error(
         `Cannot eliminate message column ${p + 1}: the current ACM column has no support.`
       );
+    }
+
+    const preferredPivot = normalizedPivots[p];
+    if (preferredPivot != null) {
+      const supportedOriginal = pos.map(q => q + p);
+      const chosenIdx = supportedOriginal.indexOf(preferredPivot);
+      if (chosenIdx === -1) {
+        throw new Error(
+          `Requested pivot c${preferredPivot + 1} is not connected to message column ${p + 1}. ` +
+          `Available pivots: ${supportedOriginal.map(i => `c${i + 1}`).join(', ')}`
+        );
+      }
+      if (chosenIdx !== 0) {
+        pos = [pos[chosenIdx], ...pos.slice(0, chosenIdx), ...pos.slice(chosenIdx + 1)];
+      }
     }
 
     // XOR all other pivot rows with the first pivot row
@@ -278,6 +310,74 @@ function processMatrix(hxIn, hzIn, k) {
   }
 
   return { hx, hz, lxList, lzList };
+}
+
+function normalizePivotNodes(rawPivotNodes, clusterOrder, messageOrder, k) {
+  if (rawPivotNodes == null) return null;
+
+  const clusterLookup = new Map(clusterOrder.map((name, idx) => [name, idx]));
+  const parseClusterValue = (value) => {
+    if (value == null) return null;
+    if (typeof value === 'string') {
+      const token = value.trim();
+      if (!token || token.toLowerCase() === 'auto') return null;
+      if (clusterLookup.has(token)) return clusterLookup.get(token);
+      if (/^c\d+$/i.test(token)) {
+        const idx = parseInt(token.slice(1), 10) - 1;
+        if (idx >= 0 && idx < clusterOrder.length) return idx;
+      }
+      if (/^\d+$/.test(token)) {
+        const idx = parseInt(token, 10);
+        if (idx >= 0 && idx < clusterOrder.length) return idx;
+        if (idx >= 1 && idx <= clusterOrder.length) return idx - 1;
+      }
+      throw new Error(`Invalid pivot value '${value}'. Use cluster name (e.g. c3), 0-based index, or 'auto'.`);
+    }
+    if (Number.isInteger(value)) {
+      if (value >= 0 && value < clusterOrder.length) return value;
+      throw new Error(`Pivot index ${value} is out of range 0..${Math.max(clusterOrder.length - 1, 0)}.`);
+    }
+    throw new Error(`Invalid pivot value type '${typeof value}'.`);
+  };
+
+  if (Array.isArray(rawPivotNodes)) {
+    if (rawPivotNodes.length !== k) {
+      throw new Error(`pivot_nodes list must contain exactly ${k} entries.`);
+    }
+    const parsed = rawPivotNodes.map(parseClusterValue);
+    if (k === 1 && parsed.filter(v => v != null).length > 1) {
+      throw new Error('With one message qubit, only one pivot node can be selected.');
+    }
+    return parsed;
+  }
+
+  if (typeof rawPivotNodes === 'object') {
+    const normalized = new Array(k).fill(null);
+    let selectedCount = 0;
+    for (const value of Object.values(rawPivotNodes)) {
+      const parsedValue = parseClusterValue(value);
+      if (parsedValue != null) selectedCount += 1;
+    }
+    if (k === 1 && selectedCount > 1) {
+      throw new Error('With one message qubit, only one pivot node can be selected.');
+    }
+
+    for (let i = 0; i < k; i++) {
+      const msgName = messageOrder[i];
+      let raw = null;
+      if (msgName && Object.prototype.hasOwnProperty.call(rawPivotNodes, msgName)) {
+        raw = rawPivotNodes[msgName];
+      } else if (Object.prototype.hasOwnProperty.call(rawPivotNodes, String(i))) {
+        raw = rawPivotNodes[String(i)];
+      }
+      const parsed = parseClusterValue(raw);
+      normalized[i] = parsed;
+    }
+
+    return normalized;
+  }
+
+  throw new Error('pivot_nodes must be omitted, an array, or an object mapping message nodes to pivots.');
 }
 
 // =========================================================
@@ -343,12 +443,12 @@ function exactDistance(stabXs, stabZs, logicalXs, logicalZs) {
 // (Python: analyze_single_graph)
 // =========================================================
 
-function analyzeSingleGraph(graphMatrix, acm, n, k) {
+function analyzeSingleGraph(graphMatrix, acm, n, k, pivotNodes = null) {
   const hx = hxClusterMat(n, k);
   const hzInput = hstack(graphMatrix, acm);
 
   const { hx: hxAfter, hz: hzAfter, lxList, lzList } =
-    processMatrix(clone2D(hx), clone2D(hzInput), k);
+    processMatrix(clone2D(hx), clone2D(hzInput), k, pivotNodes);
 
   // Stabilizer matrix = hstack(hxAfter, hzAfter)
   const stabMat = hstack(hxAfter, hzAfter);
@@ -381,12 +481,12 @@ function analyzeSingleGraph(graphMatrix, acm, n, k) {
 // (Python: main)
 // =========================================================
 
-function main(n, k, d, graphs, acm) {
+function main(n, k, d, graphs, acm, pivotNodes = null) {
   const results = [];
   let finalMatrix = null;
 
   // graphs / acm are single 2-D arrays here (one graph at a time from UI)
-  const { result, parityCheckMatrix } = analyzeSingleGraph(graphs, acm, n, k);
+  const { result, parityCheckMatrix } = analyzeSingleGraph(graphs, acm, n, k, pivotNodes);
   finalMatrix = parityCheckMatrix;
   if (result.distance === d) results.push(result);
 
@@ -413,12 +513,16 @@ export function computeMatrices(payload) {
   const clusterDict = payload.cluster_connections || {};
   const messageDict = payload.message_connections || {};
   const dTarget = payload.d !== undefined ? parseInt(payload.d, 10) : null;
+  const rawPivotNodes = payload.pivot_nodes ?? null;
 
   if (!Object.keys(clusterDict).length) {
     throw new Error('No cluster nodes provided.');
   }
 
   const { A_cc, A_cm, H, n, k } = buildParityCheckMatrix(clusterDict, messageDict);
+  const clusterOrder = Object.keys(clusterDict).sort((a, b) => parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10));
+  const messageOrder = Object.keys(messageDict).sort((a, b) => parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10));
+  const pivotNodes = normalizePivotNodes(rawPivotNodes, clusterOrder, messageOrder, k);
 
   const response = {
     A_cc_shape: [n, n],
@@ -430,6 +534,7 @@ export function computeMatrices(payload) {
     n,
     k,
     d: dTarget,
+    pivot_nodes: pivotNodes,
     results: [],
     single_result: null,
     parity_check_matrix: null,
@@ -445,14 +550,14 @@ export function computeMatrices(payload) {
     throw new Error('Target d must be a positive integer.');
   }
 
-  const { results, finalMatrix } = main(n, k, dTarget, A_cc, A_cm);
+  const { results, finalMatrix } = main(n, k, dTarget, A_cc, A_cm, pivotNodes);
   response.parity_check_matrix = finalMatrix;
 
   if (results.length > 0) {
     response.results = results;
   } else {
     // run without distance filter to get full single result
-    const { result, parityCheckMatrix } = analyzeSingleGraph(A_cc, A_cm, n, k);
+    const { result, parityCheckMatrix } = analyzeSingleGraph(A_cc, A_cm, n, k, pivotNodes);
     response.parity_check_matrix = parityCheckMatrix;
     response.single_result = result;
   }

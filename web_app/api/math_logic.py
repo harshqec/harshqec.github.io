@@ -630,7 +630,7 @@ def bitpack_matrix(mat):
     return xs, zs
 
 
-def process_matrix(hx, hz, k):
+def process_matrix(hx, hz, k, pivot_nodes=None):
     """
     Performs Gaussian elimination-like operator extraction over the adjacency matrices 
     to separate Logical Z, Logical X, and residual pure stabilizers. The message columns
@@ -640,18 +640,61 @@ def process_matrix(hx, hz, k):
         hx (np.ndarray): X-adjacency block.
         hz (np.ndarray): Z-adjacency/Check block.
         k (int): Number of logical message qubits to extract.
+        pivot_nodes (Optional[List[Optional[int]]]): Optional preferred pivot cluster indices
+            (0-based, in the original cluster ordering) for each message elimination step.
+            Use None for any step to keep automatic pivot selection.
         
     Returns:
         tuple: (updated hx, updated hz, logical X pauli list, logical Z pauli list)
     """
     row_size = hz.shape[0]
 
-    def eliminate(hx_local, hz_local, p):
+    if pivot_nodes is None:
+        pivot_nodes = [None] * k
+    else:
+        if len(pivot_nodes) != k:
+            raise ValueError(
+                f"pivot_nodes must have exactly {k} entries (one per message column)."
+            )
+        normalized_pivots = []
+        for idx, value in enumerate(pivot_nodes):
+            if value is None:
+                normalized_pivots.append(None)
+                continue
+            try:
+                pivot_index = int(value)
+            except (TypeError, ValueError):
+                raise ValueError(
+                    f"pivot_nodes[{idx}] must be an integer cluster index or None."
+                )
+            if pivot_index < 0 or pivot_index >= row_size:
+                raise ValueError(
+                    f"pivot_nodes[{idx}]={pivot_index} is out of range for n={row_size}."
+                )
+            normalized_pivots.append(pivot_index)
+        pivot_nodes = normalized_pivots
+
+    def eliminate(hx_local, hz_local, p, preferred_pivot=None):
         pos = np.where(hz_local[:, -1] == 1)[0]
         if len(pos) == 0:
             raise ValueError(
                 f"Cannot eliminate message column {p + 1}: the current ACM column has no support."
             )
+
+        if preferred_pivot is not None:
+            # Local row index q corresponds to original cluster index q + p.
+            supported_original = pos + p
+            matches = np.where(supported_original == preferred_pivot)[0]
+            if len(matches) == 0:
+                available = supported_original.tolist()
+                raise ValueError(
+                    f"Requested pivot c{preferred_pivot + 1} is not connected to message column {p + 1}. "
+                    f"Available pivots: {[f'c{i + 1}' for i in available]}"
+                )
+
+            chosen_idx = int(matches[0])
+            if chosen_idx != 0:
+                pos = np.concatenate(([pos[chosen_idx]], np.delete(pos, chosen_idx)))
 
         if len(pos) > 1:
             hz_local[pos[1:]] ^= hz_local[pos[0]]
@@ -678,7 +721,7 @@ def process_matrix(hx, hz, k):
     lz_list = []
 
     for i in range(k):
-        hx, hz, lx, lz = eliminate(hx, hz, i)
+        hx, hz, lx, lz = eliminate(hx, hz, i, pivot_nodes[i])
         lx_list.append(lx)
         lz_list.append(lz)
 
@@ -767,7 +810,7 @@ def pauli_strings(pairs, n):
     return out
 
 
-def analyze_single_graph(graph_matrix, acm, n, k):
+def analyze_single_graph(graph_matrix, acm, n, k, pivot_nodes=None):
     """
     Analyzes a single assembled quantum graph topology. Calculates the exact distance
     using stabilizer group iterations and identifies the underlying code structure.
@@ -786,7 +829,9 @@ def analyze_single_graph(graph_matrix, acm, n, k):
     hx = hx_cluster_mat(n, k)
 
     hz_input = np.hstack((graph_matrix, acm))
-    hx_after, hz_after, lx_list, lz_list = process_matrix(hx.copy(), hz_input.copy(), k)
+    hx_after, hz_after, lx_list, lz_list = process_matrix(
+        hx.copy(), hz_input.copy(), k, pivot_nodes=pivot_nodes
+    )
 
     stab_mat = np.hstack((hx_after, hz_after))
     stab_xs, stab_zs = bitpack_matrix(stab_mat)
@@ -822,7 +867,7 @@ def analyze_single_graph(graph_matrix, acm, n, k):
 # =========================================================
 # DRIVER ADAPTED FOR THE UI GRAPH
 # =========================================================
-def main(n_k_d, graphs, acm):
+def main(n_k_d, graphs, acm, pivot_nodes=None):
     n, k, d = n_k_d
 
     graph_list = [np.asarray(graphs, dtype=int)] if np.asarray(graphs).ndim == 2 else [np.asarray(g, dtype=int) for g in graphs]
@@ -831,7 +876,9 @@ def main(n_k_d, graphs, acm):
     results = []
     for graph_matrix in graph_list:
         for acm_matrix in acm_list:
-            result, final_matrix = analyze_single_graph(graph_matrix, acm_matrix, n, k)
+            result, final_matrix = analyze_single_graph(
+                graph_matrix, acm_matrix, n, k, pivot_nodes=pivot_nodes
+            )
             if result["distance"] == d:
                 results.append(result)
 

@@ -1,5 +1,4 @@
-import React, { useState, useRef, useCallback, memo } from 'react';
-import { computeMatrices } from './math_logic.js';
+import React, { useState, useRef, memo } from 'react';
 import { 
   PlusCircle, PlusSquare, Move, Link as LinkIcon, 
   Unlink, Trash2, Zap, Play, Save, RefreshCw 
@@ -46,6 +45,8 @@ export default function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   
   const [distance, setDistance] = useState(2);
+  const [pivotNodesByMessage, setPivotNodesByMessage] = useState({});
+  const [bareCodeStatus, setBareCodeStatus] = useState('Unknown');
   const [terminalOutput, setTerminalOutput] = useState('Ready to compute matrices...\n\nDraw your parity check graph on the left and click Generate Matrices.');
   const [status, setStatus] = useState('Mode: Move nodes');
   const [lastData, setLastData] = useState(null);
@@ -57,6 +58,11 @@ export default function App() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const RADIUS = 26;
+  const sortKey = (a, b) => {
+    const numA = parseInt(a.slice(1), 10);
+    const numB = parseInt(b.slice(1), 10);
+    return numA - numB;
+  };
 
   // ------------------------------------
   // Interactions
@@ -104,7 +110,7 @@ export default function App() {
       setClusterCounter(prev => prev + 1);
       setNodes(prev => ({ ...prev, [id]: { type: 'cluster', x, y } }));
       setClusterConnections(prev => ({ ...prev, [id]: [] }));
-      startTransition(() => setStatus(`Added cluster node ${id}`));
+      setStatus(`Added cluster node ${id}`);
     } else if (mode === 'add_message') {
       const id = `m${messageCounter + 1}`;
       setMessageCounter(prev => prev + 1);
@@ -133,6 +139,14 @@ export default function App() {
         });
       } else {
         delete newMC[id];
+      }
+
+      if (id.startsWith('m')) {
+        setPivotNodesByMessage(prev => {
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        });
       }
       
       setNodes(newNodes);
@@ -250,6 +264,11 @@ export default function App() {
     out.push("-".repeat(40));
     out.push("STABILIZER GENERATORS:");
     (res.stabilizer_operators || []).forEach(op => out.push(`  ${op}`));
+
+    const codeType = (res["What code it is"] || '').toLowerCase();
+    if (codeType) {
+      out.push(`CODE TYPE: ${res["What code it is"]}`);
+    }
     
     if (res.distance !== undefined) {
       out.push(`\nMINIMUM DISTANCE: ${res.distance}`);
@@ -259,6 +278,31 @@ export default function App() {
     return out.join('\n');
   };
 
+  const deriveBareCodeStatus = (data) => {
+    const firstResult = data?.results?.[0] || data?.single_result || null;
+    if (!firstResult) return 'Unknown';
+    const codeType = String(firstResult["What code it is"] || '').toLowerCase();
+    if (!codeType) return 'Unknown';
+    const isBare = codeType.includes('bare code') && !codeType.includes('not a bare');
+    return isBare ? 'Yes' : 'No';
+  };
+
+  const computeMatricesViaPythonApi = async (payload) => {
+    const response = await fetch('http://127.0.0.1:5000/api/compute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || `Backend request failed (${response.status})`);
+    }
+    return data;
+  };
+
   const matrixToString = (mat) => {
     if (!mat || mat.length === 0) return "[]";
     const rows = mat.map(row => `    [${row.join(', ')}]`);
@@ -266,13 +310,6 @@ export default function App() {
   };
 
   const mapConnectionsAPI = () => {
-    // Sort keys just like python does: node_sort_key
-    const sortKey = (a, b) => {
-      const numA = parseInt(a.slice(1));
-      const numB = parseInt(b.slice(1));
-      return numA - numB;
-    };
-    
     const cDict = {};
     Object.keys(clusterConnections).sort(sortKey).forEach(k => {
       cDict[k] = [...clusterConnections[k]].sort(sortKey);
@@ -286,22 +323,40 @@ export default function App() {
     return { cluster_connections: cDict, message_connections: mDict };
   };
 
-  const generateMatrices = () => {
+  const getPivotNodesPayload = () => {
+    const messageNodesSorted = Object.keys(messageConnections).sort(sortKey);
+    const clusterSet = new Set(Object.keys(clusterConnections));
+    const payload = {};
+
+    messageNodesSorted.forEach((m) => {
+      const selected = pivotNodesByMessage[m];
+      if (selected && selected !== 'auto' && clusterSet.has(selected)) {
+        payload[m] = selected;
+      }
+    });
+
+    return payload;
+  };
+
+  const generateMatrices = async () => {
     if (Object.keys(clusterConnections).length === 0) {
       setStatus("Error: Add at least one cluster node first.");
       return;
     }
     
     setTerminalOutput('Computing matrices...');
-    setStatus('Running in-browser quantum engine...');
+    setStatus('Running Python quantum engine (Flask API)...');
 
+    const pivotPayload = getPivotNodesPayload();
     const payload = {
       ...mapConnectionsAPI(),
-      d: parseInt(distance, 10)
+      d: parseInt(distance, 10),
+      pivot_nodes: pivotPayload
     };
 
     try {
-      const data = computeMatrices(payload);
+      const data = await computeMatricesViaPythonApi(payload);
+      setBareCodeStatus(deriveBareCodeStatus(data));
       
       setLastData({ request: payload, response: data });
       
@@ -337,6 +392,7 @@ export default function App() {
       setTerminalOutput(lines.join("\n"));
     } catch (err) {
       const errMsg = err.message || String(err);
+      setBareCodeStatus('Unknown');
       setTerminalOutput(`Error computing matrices:\n${errMsg}`);
       setStatus(`Failed: ${errMsg}`);
     }
@@ -348,6 +404,8 @@ export default function App() {
     setMessageConnections({});
     setClusterCounter(0);
     setMessageCounter(0);
+    setPivotNodesByMessage({});
+    setBareCodeStatus('Unknown');
     setTerminalOutput('');
     setStatus('Cleared all.');
     setSelectedNode(null);
@@ -383,6 +441,12 @@ export default function App() {
   // Grid removed: CSS background-image handles this with zero DOM nodes
 
   const drawnEdges = new Set();
+  const messageNodesSorted = Object.keys(messageConnections).sort(sortKey);
+  const clusterNodesSorted = Object.keys(clusterConnections).sort(sortKey);
+  const manualPivotCount = messageNodesSorted.reduce((count, m) => {
+    const value = pivotNodesByMessage[m];
+    return count + (value && value !== 'auto' ? 1 : 0);
+  }, 0);
 
   return (
     <>
@@ -427,6 +491,27 @@ export default function App() {
           <button className="primary shadow-lg ml-2" onClick={generateMatrices}>
             <Play size={16} /> Generate Matrices
           </button>
+          <div
+            style={{
+              marginLeft: 10,
+              padding: '6px 10px',
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.2)',
+              background: bareCodeStatus === 'Yes'
+                ? 'rgba(34, 197, 94, 0.25)'
+                : bareCodeStatus === 'No'
+                  ? 'rgba(239, 68, 68, 0.25)'
+                  : 'rgba(148, 163, 184, 0.25)',
+              color: '#fff',
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+              whiteSpace: 'nowrap'
+            }}
+            title="Bare code classification from Python backend"
+          >
+            Bare Code: {bareCodeStatus}
+          </div>
           <button onClick={handleSaveJson} className="ml-2" title="Save Results to JSON">
             <Save size={16} /> Save JSON
           </button>
@@ -487,6 +572,71 @@ export default function App() {
         </div>
 
         <div className="terminal-panel glass-panel">
+          {messageNodesSorted.length > 0 && (
+            <div style={{ padding: '12px 14px 8px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>
+                Pivot Selection
+              </div>
+              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 8 }}>
+                {messageNodesSorted.length === 1
+                  ? 'One message qubit detected: select one pivot node (or Auto).'
+                  : 'Select one pivot node per message qubit (or Auto).'}
+              </div>
+              <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 10 }}>
+                Manual overrides: {manualPivotCount}/{messageNodesSorted.length}
+              </div>
+              {messageNodesSorted.map((m) => (
+                <div key={m} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                  <label htmlFor={`pivot-${m}`} style={{ minWidth: 38, fontSize: 13 }}>{m}</label>
+                  <select
+                    id={`pivot-${m}`}
+                    value={pivotNodesByMessage[m] || 'auto'}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setPivotNodesByMessage(prev => ({
+                        ...prev,
+                        [m]: value,
+                      }));
+                    }}
+                    style={{
+                      padding: '4px 8px',
+                      borderRadius: 6,
+                      minWidth: 120,
+                      backgroundColor: '#f8fafc',
+                      color: '#0f172a',
+                      border: '1px solid #94a3b8'
+                    }}
+                  >
+                    <option value="auto" style={{ color: '#0f172a', backgroundColor: '#f8fafc' }}>Auto</option>
+                    {clusterNodesSorted.map((c) => (
+                      <option
+                        key={`${m}-${c}`}
+                        value={c}
+                        style={{ color: '#0f172a', backgroundColor: '#f8fafc' }}
+                      >
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      padding: '2px 8px',
+                      borderRadius: 999,
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      background: (pivotNodesByMessage[m] && pivotNodesByMessage[m] !== 'auto')
+                        ? 'rgba(34, 197, 94, 0.25)'
+                        : 'rgba(148, 163, 184, 0.25)',
+                      color: '#fff',
+                      letterSpacing: '0.02em'
+                    }}
+                  >
+                    {(pivotNodesByMessage[m] && pivotNodesByMessage[m] !== 'auto') ? 'Manual' : 'Auto'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="terminal-header">
             <Zap size={18} color="var(--primary-accent)" /> OUTPUT TERMINAL
           </div>
