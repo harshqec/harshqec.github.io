@@ -3,6 +3,7 @@ import {
   PlusCircle, PlusSquare, Move, Link as LinkIcon, 
   Unlink, Trash2, Zap, Play, Save, RefreshCw 
 } from 'lucide-react';
+import { computeMatrices } from './math_logic';
 
 // A simple utility to merge class names
 function classNames(...classes) {
@@ -287,21 +288,7 @@ export default function App() {
     return isBare ? 'Yes' : 'No';
   };
 
-  const computeMatricesViaPythonApi = async (payload) => {
-    const response = await fetch('http://127.0.0.1:5000/api/compute', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.error || `Backend request failed (${response.status})`);
-    }
-    return data;
-  };
+  const computeMatricesInBrowser = async (payload) => computeMatrices(payload);
 
   const matrixToString = (mat) => {
     if (!mat || mat.length === 0) return "[]";
@@ -345,7 +332,7 @@ export default function App() {
     }
     
     setTerminalOutput('Computing matrices...');
-    setStatus('Running Python quantum engine (Flask API)...');
+    setStatus('Running in-browser quantum engine...');
 
     const pivotPayload = getPivotNodesPayload();
     const payload = {
@@ -355,7 +342,7 @@ export default function App() {
     };
 
     try {
-      const data = await computeMatricesViaPythonApi(payload);
+      const data = await computeMatricesInBrowser(payload);
       setBareCodeStatus(deriveBareCodeStatus(data));
       
       setLastData({ request: payload, response: data });
@@ -508,7 +495,7 @@ export default function App() {
               letterSpacing: '0.02em',
               whiteSpace: 'nowrap'
             }}
-            title="Bare code classification from Python backend"
+            title="Bare code classification from in-browser engine"
           >
             Bare Code: {bareCodeStatus}
           </div>
