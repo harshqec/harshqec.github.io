@@ -7,10 +7,14 @@
     <title>Harsh | PhD Student - Quantum Computing</title>
     <meta name="description"
         content="Personal academic website of Harsh, PhD Student in Quantum Computing, specializing in cluster states and topologic UI visualization.">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="js/quantum-bg.js" defer></script>
+    <script type="module" src="js/hero-3d.js"></script>
+    <script src="js/app.js" defer></script>
 </head>
 
 <body>
@@ -31,8 +35,7 @@
         </header>
 
         <main>
-            <!-- About / Hero Section -->
-            <section class="hero page-section" id="about">
+            <section id="about" class="page-section hero">
                 <div class="hero-text">
                     <h1>Hi, I'm Harsh.</h1>
                     <h2>PhD Student in Quantum Computing</h2>
@@ -43,18 +46,21 @@
                         computing, where every bit matters, even in a qubit.
                     </p>
                     <div class="btn-group">
-                        <a href="#" class="btn btn-primary" aria-label="Download CV">Download CV</a>
+                        <a href="https://drive.google.com/file/d/13V5qfZjASv-9JiqI2I3nbUdcPs2RYdRC/view?usp=sharing"
+                            class="btn btn-primary" target="_blank" rel="noopener noreferrer"
+                            aria-label="Download CV">Download CV</a>
                         <a href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ" target="_blank"
                             rel="noopener noreferrer" class="btn btn-secondary" aria-label="View Google Scholar">Google
                             Scholar &rarr;</a>
                     </div>
                 </div>
+
                 <div class="hero-image">
-                    <img src="images/headshot.webp" alt="Headshot of Harsh standing in a modern university facility"
-                        width="900" height="1080" fetchpriority="high">
+                    <img class="hero-photo-fallback" src="images/headshot.webp"
+                        alt="Headshot of Harsh standing in a modern university facility" width="900" height="1080"
+                        fetchpriority="high">
                 </div>
 
-                <!-- Updates embedded in About section -->
                 <div class="about-updates">
                     <h3 class="section-title" style="font-size:1.25rem; margin-bottom:16px;">Latest Updates</h3>
                     <ul class="news-list">
@@ -81,21 +87,67 @@
                 <h3 class="section-title">Past Events & Participations</h3>
                 <ul class="news-list">
                     <li class="news-item">
+                        <div class="news-date">March 2026</div>
+                        <div class="news-content">
+                            <a href="#event-eecs-symposium" class="event-link">
+                                <strong>EECS Symposium 2026</strong>
+                            </a>
+                            <p>
+                                Participated in the EECS Symposium 2026 at IISER Bhopal, an exciting opportunity to share research, 
+                                exchange ideas, and engage with the vibrant academic community.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="news-item">
                         <div class="news-date">February 2026</div>
                         <div class="news-content">
                             <a href="#event-guide-visit" class="event-link">
                                 <strong>Visit by Prof. Shayan Srinivasa Garani & Ujjain Trip</strong>
                             </a>
-                            <p>Hosted Prof. Shayan Srinivasa Garani (IISc) for a research talk, followed by a cultural visit to Ujjain.</p>
+                            <p>Hosted Prof. Shayan Srinivasa Garani (IISc) for a research talk, followed by a cultural
+                                visit to Ujjain.</p>
                         </div>
                     </li>
                     <li class="news-item">
-                        <div class="news-date">December 2025</div>
+                        <div class="news-date">June 2025</div>
+                        <div class="news-content">
+                            <a href="#event-nptel-workshop" class="event-link">
+                                <strong>NPTEL Workshop: Hands-on Quantum Computing (2nd Edition)</strong>
+                            </a>
+                            <p>Following the success of the inaugural session, we organized the 2nd edition at IISER Bhopal, expanding the curriculum and cloud simulation platform.</p>
+                        </div>
+                    </li>
+                    <li class="news-item">
+                        <div class="news-date">Feb-Mar 2025</div>
+                        <div class="news-content">
+                            <a href="#event-gian-course" class="event-link">
+                                <strong>GIAN Course: Sparse Graphs - Treewidth, Planarity, Bounded Expansion</strong>
+                            </a>
+                            <p>
+                                Attended an intensive GIAN course at IIT Dharwad focused on structural graph theory.
+                                The sessions explored the bridge between complex graph classes and modern algorithmic
+                                efficiency.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="news-item">
+                        <div class="news-date">December 2024</div>
                         <div class="news-content">
                             <a href="#event-iisc-fujitsu" class="event-link">
                                 <strong>IISc Fujitsu Quantum Computing Workshop</strong>
                             </a>
-                            <p>Presented a lightning talk on fault-tolerant non-CSS codes at this collaborative event.
+                            <p>Presented a lightning talk on fault-tolerant non-CSS codes at this collaborative event.</p>
+                        </div>
+                    </li>
+                    <li class="news-item">
+                        <div class="news-date">June 2024</div>
+                        <div class="news-content">
+                            <a href="#event-nptel-workshop" class="event-link">
+                                <strong>NPTEL Workshop: Hands-on Quantum Computing</strong>
+                            </a>
+                            <p>
+                                Organized a 5-day intensive workshop at IISER Bhopal. I led the sessions on quantum algorithms 
+                                using PennyLane and co-implemented a cloud API for participant materials and simulations.
                             </p>
                         </div>
                     </li>
@@ -137,7 +189,6 @@
                 <h3 class="section-title">Research Spotlight</h3>
                 <div class="pub-grid">
 
-                    <!-- Project 1 -->
                     <article class="pub-card">
                         <h4 class="pub-title">Fault-tolerant syndrome extraction in [[n,1,3]] non-CSS codes</h4>
                         <div class="pub-venue">ArXiv Preprint, 2025</div>
@@ -146,12 +197,13 @@
                             Focuses on reducing hardware overhead for near-term fault-tolerant quantum error correction.
                         </p>
                         <div class="pub-links">
-                            <a href="#" class="pub-link">Preprint</a>
-                            <a href="#" class="pub-link">PDF</a>
+                            <a href="https://arxiv.org/abs/2501.12072" target="_blank" rel="noopener noreferrer"
+                                class="pub-link">Preprint</a>
+                            <a href="https://arxiv.org/pdf/2501.12072" target="_blank" rel="noopener noreferrer"
+                                class="pub-link">PDF</a>
                         </div>
                     </article>
 
-                    <!-- Project 2 -->
                     <article class="pub-card">
                         <h4 class="pub-title">Interactive Topological Visualization for MBQC</h4>
                         <div class="pub-venue">QuCIS Lab, IISER Bhopal</div>
@@ -162,12 +214,11 @@
                         </p>
                         <div class="pub-links">
                             <a href="qmatrix/index.html" class="pub-link">Live Demo</a>
-                            <a href="https://github.com/harshqec/QuantumGraph-Analyzer" target="_blank" rel="noopener noreferrer"
-                                class="pub-link">Code</a>
+                            <a href="https://github.com/harshqec/QuantumGraph-Analyzer" target="_blank"
+                                rel="noopener noreferrer" class="pub-link">Code</a>
                         </div>
                     </article>
 
-                    <!-- Project 3 -->
                     <article class="pub-card">
                         <h4 class="pub-title">Bare Code Construction for Near-Term Hardware</h4>
                         <div class="pub-venue">Ongoing Research</div>
@@ -206,30 +257,24 @@
             <section id="contact" class="page-section">
                 <h3 class="section-title">Get in Touch</h3>
                 <div class="contact-container">
-                    <!-- Large Social Board -->
                     <div class="contact-board">
                         <div class="board-item">
-                            <!-- <span class="board-label">Direct Email</span> -->
                             <a href="mailto:harsh22@iiserb.ac.in" class="board-link">harsh22@iiserb.ac.in</a>
                         </div>
                         <div class="board-item">
-                            <!-- <span class="board-label">Professional Network</span> -->
                             <a href="https://www.linkedin.com/in/harsh-gupta-aa3bbb99/" target="_blank"
                                 rel="noopener noreferrer" class="board-link">LinkedIn</a>
                         </div>
                         <div class="board-item">
-                            <!-- <span class="board-label">Open Source</span> -->
                             <a href="https://github.com/harshqec" target="_blank" rel="noopener noreferrer"
                                 class="board-link">GitHub</a>
                         </div>
                         <div class="board-item">
-                            <!-- <span class="board-label">Research ID</span> -->
                             <a href="https://orcid.org/0009-0000-0507-4146" target="_blank" rel="noopener noreferrer"
                                 class="board-link">ORCID</a>
                         </div>
                     </div>
 
-                    <!-- Message Box -->
                     <div class="contact-form-container">
                         <h4>Send a Message</h4>
                         <form id="contact-form" action="https://formspree.io/f/xgorvznp" method="POST">
@@ -348,6 +393,253 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Event Detail: GIAN Course (Sub-page) -->
+            <section id="event-gian-course" class="page-section">
+                <div class="detail-header">
+                    <a href="#events" class="back-link">&larr; Back to Events</a>
+                    <h3 class="section-title">GIAN Course on Sparse Graphs</h3>
+                    <div class="news-date" style="margin-top: 8px;">February - March 2025</div>
+                </div>
+
+                <div class="detail-content">
+                    <p>
+                        I participated in the GIAN course on <strong>"Sparse Graphs: Treewidth, Planarity, and Bounded
+                            Expansion"</strong> hosted at <strong>IIT Dharwad</strong>.
+                        The course was conducted in an intensive offline mode, featuring 24 hours of lectures and 24
+                        hours of hands-on tutorials.
+                    </p>
+                    <p>
+                        The curriculum delved into fundamental structural properties of sparse graphs, including planar
+                        graphs, minor-closed classes, and the theory of bounded expansion.
+                        It was a valuable experience for understanding how these structural insights lead to efficient
+                        algorithms for complex computational problems.
+                    </p>
+
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <a href="https://sites.google.com/view/giansparsegraph/home" target="_blank"
+                            rel="noopener noreferrer" class="btn btn-secondary">Official Course Website &rarr;</a>
+                        <a href="https://drive.google.com/file/d/1Uiwsxf7RkPkT-EuO7UCnKHP1-3RwETX2/view?pli=1" target="_blank"
+                            rel="noopener noreferrer" class="btn btn-primary">View Certificate &rarr;</a>
+                    </div>
+
+                    <div class="pub-grid"
+                        style="margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <div class="pub-card">
+                            <h4 style="margin-top: 0; color: var(--accent-primary); margin-bottom: 12px;">Syllabus
+                                Highlights</h4>
+                            <ul style="padding-left: 20px; font-size: 0.95rem; line-height: 1.8;">
+                                <li>Treewidth and Tree-decompositions</li>
+                                <li>Planar Graphs and Euler's Formula</li>
+                                <li>Minor-closed Graph Classes</li>
+                                <li>Bounded Expansion and Shallow Minors</li>
+                            </ul>
+                        </div>
+                        <div class="pub-card">
+                            <h4 style="margin-top: 0; color: var(--accent-primary); margin-bottom: 12px;">Course
+                                Objectives</h4>
+                            <p style="font-size: 0.95rem;">
+                                The primary goal was to teach fundamental properties of specialized graph classes and
+                                illustrate their utility
+                                through concrete algorithmic applications, bridging the gap between mathematical theory
+                                and practical computation.
+                            </p>
+                            <p style="font-size: 0.95rem; margin-top: 10px;">
+                                Organized by <strong>Prof. Sagnik Sen</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="gallery-grid" style="margin-top: 40px;">
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_1_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_1_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_2_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_2_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_3_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_3_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_4_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_4_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_5_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_5_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_6_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_6_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_7_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_7_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/dharwad_8_full.webp" class="lightbox-trigger"
+                                title="GIAN Course at IIT Dharwad">
+                                <img src="images/dharwad_8_thumb.webp" alt="GIAN Course Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Event Detail: NPTEL Workshop (Sub-page) -->
+            <section id="event-nptel-workshop" class="page-section">
+                <div class="detail-header">
+                    <a href="#events" class="back-link">&larr; Back to Events</a>
+                    <h3 class="section-title">NPTEL Workshop: Hands-on Quantum Computing</h3>
+                    <div class="news-date" style="margin-top: 8px;">June 2024 & June 2025</div>
+                </div>
+
+                <div class="detail-content">
+                    <p>
+                        I had the pleasure of organizing and leading sessions at the <strong>NPTEL Workshop on Hands-on Programming for Quantum Computers</strong> held at <strong>IISER Bhopal</strong>. 
+                        Due to overwhelming interest, the workshop was conducted as an intensive 5-day program in both 2024 and 2025.
+                    </p>
+                    <p>
+                        My contributions included:
+                    </p>
+                    <ul style="padding-left: 20px; margin-bottom: 20px;">
+                        <li><strong>Quantum Algorithms in Depth:</strong> Delivered comprehensive lectures and hands-on tutorials on core quantum algorithms using the <strong>PennyLane</strong> framework.</li>
+                        <li><strong>Cloud Infrastructure:</strong> Collaborated with colleagues to implement a custom cloud server API. This platform provided each participant with individual login credentials to access real-time updated materials and perform quantum simulations directly in the cloud.</li>
+                    </ul>
+
+                    <h4 style="margin-top: 40px; color: var(--accent-primary);">2025 Edition Gallery</h4>
+                    <div class="gallery-grid" style="margin-top: 20px;">
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2025_1_full.webp" class="lightbox-trigger" title="NPTEL 2025 Workshop">
+                                <img src="images/nptel_2025_1_thumb.webp" alt="Workshop Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2025_2_full.webp" class="lightbox-trigger" title="NPTEL 2025 Workshop">
+                                <img src="images/nptel_2025_2_thumb.webp" alt="Workshop Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2025_3_full.webp" class="lightbox-trigger" title="NPTEL 2025 Workshop">
+                                <img src="images/nptel_2025_3_thumb.webp" alt="Workshop Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2025_4_full.webp" class="lightbox-trigger" title="NPTEL 2025 Workshop">
+                                <img src="images/nptel_2025_4_thumb.webp" alt="Workshop Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                    </div>
+
+                    <h4 style="margin-top: 40px; color: var(--accent-primary);">2024 Edition Gallery</h4>
+                    <div class="gallery-grid" style="margin-top: 20px;">
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_1_full.webp" class="lightbox-trigger" title="NPTEL Workshop Banner">
+                                <img src="images/nptel_2024_1_thumb.webp" alt="Workshop Banner" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_2_full.webp" class="lightbox-trigger" title="Hands-on Session">
+                                <img src="images/nptel_2024_2_thumb.webp" alt="Hands-on Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_3_full.webp" class="lightbox-trigger" title="Interactive Discussion">
+                                <img src="images/nptel_2024_3_thumb.webp" alt="Interactive Discussion" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_4_full.webp" class="lightbox-trigger" title="Group Photo">
+                                <img src="images/nptel_2024_4_thumb.webp" alt="Group Photo" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_5_full.webp" class="lightbox-trigger" title="Certificate Distribution">
+                                <img src="images/nptel_2024_5_thumb.webp" alt="Certificate Distribution" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/nptel_2024_6_full.webp" class="lightbox-trigger" title="Workshop Venue">
+                                <img src="images/nptel_2024_6_thumb.webp" alt="Workshop Venue" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Event Detail: EECS Symposium (Sub-page) -->
+            <section id="event-eecs-symposium" class="page-section">
+                <div class="detail-header">
+                    <a href="#events" class="back-link">&larr; Back to Events</a>
+                    <h3 class="section-title">EECS Symposium 2026</h3>
+                    <div class="news-date" style="margin-top: 8px;">March 11 - 12, 2026</div>
+                </div>
+
+                <div class="detail-content">
+                    <p>
+                        The <strong>EECS Symposium 2026</strong> was an exhilarating platform for sharing cutting-edge research and fostering academic collaboration. 
+                        It was a privilege to present my work and engage in thought-provoking discussions with fellow researchers and industry experts.
+                    </p>
+                    <p>
+                        The event provided a unique opportunity to:
+                    </p>
+                    <ul style="padding-left: 20px; margin-bottom: 20px;">
+                        <li><strong>Share Research:</strong> Presented ongoing work in quantum computing, receiving valuable feedback from a diverse audience.</li>
+                        <li><strong>Exchange Ideas:</strong> Participated in interactive sessions that bridged various disciplines within Electrical Engineering and Computer Science.</li>
+                        <li><strong>Community Engagement:</strong> Connected with the vibrant research community at <strong>IISER Bhopal</strong>, exploring potential avenues for future collaboration.</li>
+                    </ul>
+
+                    <div class="gallery-grid" style="margin-top: 40px;">
+                        <figure class="gallery-item">
+                            <a href="images/eecs_symposium_2026_1_full.webp" class="lightbox-trigger" title="EECS Symposium 2026">
+                                <img src="images/eecs_symposium_2026_1_thumb.webp" alt="Symposium Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                        <figure class="gallery-item">
+                            <a href="images/eecs_symposium_2026_2_full.webp" class="lightbox-trigger" title="EECS Symposium 2026">
+                                <img src="images/eecs_symposium_2026_2_thumb.webp" alt="Symposium Session" loading="lazy">
+                                <div class="zoom-overlay"><span>Click to Expand</span></div>
+                            </a>
+                        </figure>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Minimal Footer -->
@@ -368,20 +660,30 @@
     <div id="lightbox" class="lightbox" aria-hidden="true">
         <div class="lightbox-content">
             <button class="lightbox-close" aria-label="Close Lightbox">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
             <button class="lightbox-prev" aria-label="Previous Image">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
             </button>
             <button class="lightbox-next" aria-label="Next Image">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
             </button>
             <img id="lightbox-img" src="" alt="Full resolution view">
         </div>
     </div>
 
     <script src="quantum-bg.js?v=3" defer></script>
-    <script src="app.js?v=3" defer></script>
+    <script src="app.js?v=7" defer></script>
 </body>
 
 </html>

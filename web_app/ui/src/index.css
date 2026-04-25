@@ -16,6 +16,8 @@
   /* Canvas Colors */
   --node-cluster: #3B82F6;
   --node-message: #F97316;
+  --node-cluster-absorbed: #a87656;
+  --node-message-dim: #c48b66;
   --line-cluster: #64748B;
   --line-message: #FDBA74;
 
@@ -27,9 +29,15 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body,
+button,
+input,
+select,
+textarea {
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 body {
@@ -73,6 +81,41 @@ header {
   gap: 0.75rem;
 }
 
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 0.75rem;
+  color: var(--primary-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-link:hover {
+  text-decoration: underline;
+}
+
+.editor-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-right: 0.75rem;
+}
+
+.toolbar-separator {
+  margin: 0 0.75rem;
+}
+
+.generate-btn,
+.save-btn {
+  margin-left: 0.5rem;
+}
+
+.distance-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .separator {
   width: 1px;
   height: 24px;
@@ -92,6 +135,7 @@ button {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 button:hover {
@@ -102,6 +146,14 @@ button:hover {
 
 button:active {
   transform: translateY(1px);
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
 }
 
 button.primary {
@@ -147,6 +199,7 @@ input[type="number"]:focus {
 /* Canvas Area */
 .canvas-container {
   flex: 1;
+  min-width: 0;
   position: relative;
   overflow: hidden;
   cursor: crosshair;
@@ -158,6 +211,7 @@ input[type="number"]:focus {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
 }
 
 .node {
@@ -174,8 +228,11 @@ input[type="number"]:focus {
 
 .node-text {
   font-weight: bold;
-  font-size: 14px;
-  fill: #FFF;
+  font-size: 12px;
+  fill: #f8fafc;
+  stroke: rgba(15, 23, 42, 0.65);
+  stroke-width: 2.2px;
+  paint-order: stroke;
   pointer-events: none;
   user-select: none;
   text-anchor: middle;
@@ -184,7 +241,7 @@ input[type="number"]:focus {
 
 /* Terminal Side */
 .terminal-panel {
-  width: 450px;
+  width: clamp(480px, 34vw, 620px);
   display: flex;
   flex-direction: column;
 }
@@ -199,6 +256,7 @@ input[type="number"]:focus {
 }
 
 .terminal-output {
+  position: relative;
   flex: 1;
   padding: 1.5rem;
   background: var(--bg-terminal);
@@ -236,4 +294,80 @@ input[type="number"]:focus {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3); 
+}
+
+@media (max-width: 1024px) {
+  #root {
+    height: auto;
+    min-height: 100dvh;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .toolbar-group {
+    flex-wrap: wrap;
+  }
+
+  .editor-title {
+    margin-right: 0;
+  }
+
+  .home-link {
+    margin-right: 0;
+  }
+
+  .workspace {
+    flex-direction: column;
+  }
+
+  .terminal-panel {
+    width: 100%;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding: 0.75rem;
+  }
+
+  header {
+    padding: 0.8rem;
+  }
+
+  .terminal-output {
+    font-size: 0.8rem;
+    padding: 1rem;
+  }
+
+  button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .toolbar-separator {
+    display: none;
+  }
+
+  .distance-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  button:hover,
+  button:active {
+    transform: none;
+  }
 }

@@ -1,42 +1,140 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  background-image: linear-gradient(120deg,
+      #0f172a 0%,
+      #1e293b 35%,
+      #172554 65%,
+      #111827 100%);
+  background-size: 260% 260%;
+  animation: page-color-drift 70s ease-in-out infinite;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.quantum-bg-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.58;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.quantum-bg-canvas-soft {
+  opacity: 0.24;
+}
+
+.app-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 1.5rem;
+}
+
+.terminal-output-content {
+  position: relative;
+  z-index: 1;
+}
+
+.transfer-wave-layer {
+  pointer-events: none;
+}
+
+.transfer-wave-path {
+  mix-blend-mode: screen;
+}
+
+.transfer-wave-dot {
+  filter: drop-shadow(0 0 6px rgba(186, 230, 253, 0.9));
+}
+
+.cluster-receive-glow {
+  mix-blend-mode: screen;
+}
+.node-sphere {
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1;
+}
+.node-sphere-inner {
+  fill: rgba(255, 255, 255, 0.08);
+}
+.node-specular {
+  fill: rgba(255, 255, 255, 0.45);
+}
+.node-orbit-ring {
+  fill: none;
+  stroke-width: 1.2;
+  opacity: 0.72;
+}
+.node-orbit-ring.cluster {
+  stroke: rgba(186, 230, 253, 0.85);
+}
+.node-orbit-ring.message,
+.node-orbit-ring.cluster-absorbed {
+  stroke: rgba(254, 215, 170, 0.82);
+}
+
+.node-orbit-ball {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 0.8;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45));
+}
+
+.node-orbit-ball.cluster {
+  fill: rgba(191, 219, 254, 0.95);
+}
+
+.node-orbit-ball.message,
+.node-orbit-ball.cluster-absorbed {
+  fill: rgba(254, 215, 170, 0.95);
+}
+
+.node-ring {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.node-ball-plane {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.node-ball-spin {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.node-ball-spin.spin-x {
+  animation: none;
+}
+
+.node-ball-spin.spin-y {
+  animation: none;
+}
+
+.node-ball-spin.spin-z {
+  animation: none;
+}
+.message-burst-layer {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes page-color-drift {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (prefers-reduced-motion: reduce) {
+  #root {
+    animation: none;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
