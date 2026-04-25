@@ -14,6 +14,19 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
+let mouseX = -1000;
+let mouseY = -1000;
+
+window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+window.addEventListener('mouseout', () => {
+    mouseX = -1000;
+    mouseY = -1000;
+});
+
 const symbols = ['|0⟩', '|1⟩', '|ψ⟩', '|+⟩', '|-⟩', '|Φ⟩', 'H', 'X', 'Y', 'Z', '√X'];
 
 class QuantumBlock {
@@ -136,6 +149,49 @@ for (let i = 0; i < numBlocks; i++) {
 
 function animate() {
     ctx.clearRect(0, 0, width, height);
+
+    // Draw entanglement threads based on cursor proximity
+    ctx.lineWidth = 1;
+    for (let i = 0; i < blocks.length; i++) {
+        const b1 = blocks[i];
+        const dxMouse = b1.x - mouseX;
+        const dyMouse = b1.y - mouseY;
+        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        
+        if (distMouse < 240) {
+            // Thread from cursor to node
+            const alpha = 1 - (distMouse / 240);
+            ctx.strokeStyle = `rgba(67, 56, 202, ${alpha * 0.6})`;
+            ctx.beginPath();
+            ctx.moveTo(mouseX, mouseY);
+            ctx.lineTo(b1.x, b1.y);
+            ctx.stroke();
+
+            // Thread between nodes mutually near the cursor
+            for (let j = i + 1; j < blocks.length; j++) {
+                const b2 = blocks[j];
+                const dx2 = b2.x - mouseX;
+                const dy2 = b2.y - mouseY;
+                const distMouse2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                
+                if (distMouse2 < 240) {
+                    const dxb = b1.x - b2.x;
+                    const dyb = b1.y - b2.y;
+                    const distBlocks = Math.sqrt(dxb * dxb + dyb * dyb);
+                    
+                    if (distBlocks < 200) {
+                        const alphaBlock = 1 - (distBlocks / 200);
+                        const combinedAlpha = Math.min(alpha, 1 - (distMouse2 / 240)) * alphaBlock * 0.8;
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${combinedAlpha})`; // Purplish connection
+                        ctx.beginPath();
+                        ctx.moveTo(b1.x, b1.y);
+                        ctx.lineTo(b2.x, b2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+    }
 
     blocks.forEach(block => {
         block.update(blocks);

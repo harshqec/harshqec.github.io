@@ -260,9 +260,9 @@ section {
 
 .page-section.active {
   display: block;
-  /* Default for most sections */
+  /* Quantum State Collapse transition */
   opacity: 1;
-  animation: page-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: state-collapse 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .hero.page-section.active {
@@ -270,17 +270,24 @@ section {
   /* Specific for hero grid */
 }
 
-@keyframes page-fade-in {
-  from {
+@keyframes state-collapse {
+  0% {
     opacity: 0;
-    transform: translateY(15px);
+    transform: scale(0.97) translateY(12px);
+    filter: blur(6px) drop-shadow(6px 0px 0px rgba(67, 56, 202, 0.5)) drop-shadow(-6px 0px 0px rgba(139, 92, 246, 0.5));
   }
-
-  to {
+  50% {
+    opacity: 0.8;
+    transform: scale(1.005) translateY(-2px);
+    filter: blur(2px) drop-shadow(2px 0px 0px rgba(67, 56, 202, 0.3)) drop-shadow(-2px 0px 0px rgba(139, 92, 246, 0.3));
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
+    filter: blur(0px) drop-shadow(0 0 0 transparent);
   }
 }
+
 
 /* Nav Highlighting */
 nav ul li a.nav-active {
