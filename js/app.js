@@ -146,17 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             photo.addEventListener('error', () => photo.classList.add('fragment-revealed'), { once: true });
         }
 
-        // Re-trigger on interaction
-        const triggerHandler = (e) => {
-            if (isAnimating) return;
-            runAssemble();
-        };
 
-        heroImage.addEventListener('pointerdown', (e) => {
-            // Only trigger on primary button (left click / touch)
-            if (e.button !== 0) return;
-            triggerHandler(e);
-        });
 
         // Global trigger for flexibility
         window.addEventListener('trigger-hero-fragmentation', () => {
