@@ -1064,9 +1064,8 @@ footer {
   text-align: center;
 }
 
-/* Responsive */
-/*
-@media (max-width: 768px) {
+/* Responsive Layout for Tablets and Mobiles */
+@media (max-width: 850px) {
   .contact-container {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -1079,6 +1078,7 @@ footer {
   header {
     flex-direction: column;
     gap: 16px;
+    align-items: center;
   }
 
   nav ul {
@@ -1087,21 +1087,69 @@ footer {
   }
 
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 40px;
+    text-align: center;
   }
 
   .hero-image {
     order: -1;
-    max-width: 300px;
+    max-width: 320px;
     margin: 0 auto;
   }
 
   .hero-text h1 {
     font-size: 2.5rem;
   }
+
+  .hero-text p {
+    text-align: center;
+    margin: 0 auto 36px auto;
+    max-width: 100%;
+  }
+
+  .btn-group {
+    justify-content: center;
+  }
+
+  /* Events */
+  .news-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .news-date {
+    min-width: auto;
+  }
+
+  /* Interactive Lab */
+  .launch-card {
+    padding: 32px 24px;
+  }
+
+  /* Contact Form */
+  .contact-form-container {
+    padding: 24px;
+  }
+  
+  /* Footer */
+  .footer-links {
+    flex-wrap: wrap;
+  }
 }
-*/
+
+@media (max-width: 480px) {
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-text h2 {
+    font-size: 1.1rem;
+  }
+  
+  .hero-text p {
+    font-size: 0.95rem;
+  }
+}
 
 /* Targeted Footer Highlight (Kept for Contact emphasis) */
 footer:target {
