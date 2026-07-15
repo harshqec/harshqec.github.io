@@ -8,6 +8,45 @@ import './QuantumLab.css';
 import { Link as RouterLink, useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 
+let pyodideInstance = null;
+let pyodideInitPromise = null;
+
+async function getPyodide() {
+  if (pyodideInstance) return pyodideInstance;
+  if (pyodideInitPromise) return pyodideInitPromise;
+
+  pyodideInitPromise = (async () => {
+    const pyodide = await window.loadPyodide({
+      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
+    });
+    
+    await pyodide.loadPackage("numpy");
+    
+    const base = import.meta.env.BASE_URL || '/';
+    const sfUrl = base.endsWith('/') ? base + 'standardform.py' : base + '/standardform.py';
+    const bccUrl = base.endsWith('/') ? base + 'bare_code_checker.py' : base + '/bare_code_checker.py';
+    
+    const [sfRes, bccRes] = await Promise.all([
+      fetch(sfUrl),
+      fetch(bccUrl)
+    ]);
+    
+    pyodide.FS.writeFile('/standardform.py', await sfRes.text());
+    pyodide.FS.writeFile('/bare_code_checker.py', await bccRes.text());
+    
+    pyodide.runPython(`
+import sys
+if '/' not in sys.path:
+    sys.path.append('/')
+    `);
+
+    pyodideInstance = pyodide;
+    return pyodide;
+  })();
+
+  return pyodideInitPromise;
+}
+
 // A simple utility to merge class names
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -748,8 +787,7 @@ export default function QuantumLab() {
         lines.push(data.message);
         setStatus("Matrices generated. Add message node to compute stabilizers.");
       } else {
-        setStatus("Calling backend for Bare Code analysis...");
-        // Call Python Backend for Bare Code Analysis
+        setStatus("Running Python in browser via Pyodide for Bare Code analysis...");
         const backendPayload = {
           parity_check_matrix: data.parity_check_matrix,
           check_mode: checkMode,
@@ -759,28 +797,79 @@ export default function QuantumLab() {
         };
 
         try {
-          const response = await fetch('http://localhost:5000/api/check_bare_code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(backendPayload)
-          });
-          const backendData = await response.json();
+          const pyodide = await getPyodide();
+          const pyPayload = pyodide.toPy(backendPayload);
+          pyodide.globals.set("payload", pyPayload);
+          
+          const pyScript = `
+import numpy as np
+from standardform import standard_form, encoding_logicals, original_logicals, mattostab
+from bare_code_checker import find_code
+
+p_dict = payload
+pcm = np.array(p_dict['parity_check_matrix'])
+check_mode = p_dict.get('check_mode', 'variants')
+search_mode = p_dict.get('search_mode', 'random')
+max_perms = int(p_dict.get('max_permutations', 1000000))
+max_valid_perms = int(p_dict.get('max_valid_permutations', 1000))
+
+stab = mattostab(pcm)
+std_stab_mat, r, swaps = standard_form(stab)
+x_logical, z_logical = encoding_logicals(std_stab_mat, r)
+x_logical_orig, z_logical_orig = original_logicals(x_logical, z_logical, swaps)
+
+x_logicals_str = mattostab(x_logical_orig)
+z_logicals_str = mattostab(z_logical_orig)
+
+result = find_code(
+    stab,
+    [x_logicals_str, z_logicals_str],
+    check_mode=check_mode,
+    max_permutations_per_stabilizer=max_perms,
+    max_valid_permutations_per_stabilizer=max_valid_perms,
+    search_mode=search_mode,
+    random_seed=123,
+    preferred_sequences=None,
+    verbose=False,
+    old_format=True
+)
+
+is_bare = result.get('is_bare', False)
+status = result.get('status', 'unknown')
+
+# Return dictionary back to JS
+{
+    'success': True,
+    'is_bare': is_bare,
+    'status': status,
+    'logical_Xs': x_logicals_str,
+    'logical_Zs': z_logicals_str,
+    'check_mode': check_mode,
+    'search_mode': search_mode
+}
+`;
+          const pyResult = await pyodide.runPythonAsync(pyScript);
+          const backendData = pyResult.toJs({ dict_converter: Object.fromEntries });
           
           if (backendData.success) {
              setBareCodeStatus(backendData.is_bare ? 'Yes' : 'No');
-             lines.push("Backend Bare Code Status: " + backendData.status);
+             lines.push("Pyodide Bare Code Status: " + backendData.status);
              lines.push("Is Bare Code: " + (backendData.is_bare ? 'Yes' : 'No'));
              lines.push("Logical Xs: " + JSON.stringify(backendData.logical_Xs));
              lines.push("Logical Zs: " + JSON.stringify(backendData.logical_Zs));
              lines.push("");
           } else {
              setBareCodeStatus('Error');
-             lines.push("Backend Error: " + backendData.error);
+             lines.push("Pyodide Error: Unknown failure");
           }
+          
+          pyPayload.destroy();
+          pyResult.destroy();
+
         } catch (err) {
-          console.error("Backend error:", err);
+          console.error("Pyodide error:", err);
           setBareCodeStatus('Error');
-          lines.push("Failed to connect to Python backend. Is it running on port 5000?");
+          lines.push("Failed to run Python logic in browser via Pyodide: " + err.message);
         }
 
         if (data.results && data.results.length > 0) {
