@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Mail, MapPin, Linkedin, Github, GraduationCap } from 'lucide-react'
@@ -13,14 +13,13 @@ const socialIcons = [
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
 
     const leftEls = section.querySelectorAll('.contact-left-anim')
-    const formCard = section.querySelector('.contact-form-card')
+    const visualCard = section.querySelector('.contact-visual-card')
 
     gsap.fromTo(
       leftEls,
@@ -39,9 +38,9 @@ export default function Contact() {
       }
     )
 
-    if (formCard) {
+    if (visualCard) {
       gsap.fromTo(
-        formCard,
+        visualCard,
         { opacity: 0, x: 30 },
         {
           opacity: 1,
@@ -58,27 +57,6 @@ export default function Contact() {
       )
     }
   }, [])
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const form = e.currentTarget
-    const formData = new FormData(form)
-
-    fetch('https://formspree.io/f/xgorvznp', {
-      method: 'POST',
-      body: formData,
-      headers: { Accept: 'application/json' },
-    })
-      .then((res) => {
-        if (res.ok) {
-          setFormStatus('success')
-          form.reset()
-        } else {
-          setFormStatus('error')
-        }
-      })
-      .catch(() => setFormStatus('error'))
-  }
 
   return (
     <section
@@ -139,76 +117,11 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Right column — Form */}
-        <div className="contact-form-card glass-card-light rounded-2xl p-10">
-          <h3 className="text-heading-m text-stardust mb-6">Send a Message</h3>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div>
-              <label htmlFor="form-name" className="text-caption text-stardust block mb-2">
-                FULL NAME
-              </label>
-              <input
-                type="text"
-                id="form-name"
-                name="name"
-                placeholder="Your Name"
-                required
-                className="w-full bg-space-void border border-white/40 rounded-lg px-4 py-3 text-base font-body text-stardust placeholder:text-silver/50 focus:border-quantum focus:shadow-[0_0_0_3px_rgba(107,92,231,0.15)] focus:outline-none transition-all"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="form-email" className="text-caption text-stardust block mb-2">
-                YOUR EMAIL
-              </label>
-              <input
-                type="email"
-                id="form-email"
-                name="_replyto"
-                placeholder="yourname@email.com"
-                required
-                className="w-full bg-space-void border border-white/40 rounded-lg px-4 py-3 text-base font-body text-stardust placeholder:text-silver/50 focus:border-quantum focus:shadow-[0_0_0_3px_rgba(107,92,231,0.15)] focus:outline-none transition-all"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="form-message" className="text-caption text-stardust block mb-2">
-                MESSAGE
-              </label>
-              <textarea
-                id="form-message"
-                name="message"
-                placeholder="How can I help you?"
-                rows={5}
-                required
-                className="w-full bg-space border border-white/40 rounded-lg px-4 py-3 text-base font-body text-stardust placeholder:text-silver/50 focus:border-quantum focus:shadow-[0_0_0_3px_rgba(107,92,231,0.15)] focus:outline-none transition-all resize-vertical"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-quantum text-stardust font-medium rounded-lg hover:bg-quantum-light hover:-translate-y-0.5 transition-all duration-250 mt-2"
-            >
-              Send Message
-            </button>
-
-            {formStatus === 'success' && (
-              <p className="text-sm text-quantum font-medium mt-1">
-                Thanks for reaching out! I'll get back to you within 24 hours.
-              </p>
-            )}
-            {formStatus === 'error' && (
-              <p className="text-sm text-red-500 font-medium mt-1">
-                Something went wrong. Please try again.
-              </p>
-            )}
-
-            <p className="text-caption text-silver mt-1">
-              Powered by Formspree. I usually reply within 24 hours.
-            </p>
-          </form>
-        </div>
+        <img
+          src="/images/contact-visual-thinking.gif"
+          alt="Two people sharing ideas through speech bubbles"
+          className="contact-visual-card relative -left-12 -top-12 w-full h-auto rounded-2xl"
+        />
       </div>
     </section>
   )

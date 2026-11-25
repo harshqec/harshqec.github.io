@@ -4,20 +4,33 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const updates = [
-  {
-    date: 'May 2026',
-    title: 'arXiv Preprint Update',
-    description:
-      'Fault-tolerant syndrome extraction in [[n,1,3]] non-CSS code family generated using measurements on graph states.',
-  },
-  {
-    date: 'March 2026',
-    title: 'EECS Symposium, IISER Bhopal',
-    description:
-      'Presented research on fault-tolerant syndrome extraction in [[n, 1, 3]] graph codes.',
-  },
+type Update = {
+  title: string
+  description: string
+  links?: { label: string; href: string }[]
+}
 
+const updates: Update[] = [
+  {
+    title: 'Paper Accepted in APS Open Science',
+    description:
+      'APS Open Science accepted our paper, “Bare-ancilla fault-tolerant syndrome extraction: General extensions of distance-three codes and structural criteria for graph codes.”',
+    links: [
+      {
+        label: 'Journal announcement',
+        href: 'https://journals.aps.org/apsos/accepted/10.1103/4mrw-3qj1',
+      },
+      {
+        label: 'Read the paper on arXiv',
+        href: 'https://arxiv.org/abs/2501.12072',
+      },
+    ],
+  },
+  {
+    title: 'Poster Accepted at QIP 2027',
+    description:
+      'My poster has been accepted for presentation at QIP 2027. I hope to see you in Singapore!',
+  },
 ]
 
 export default function LatestUpdates() {
@@ -64,13 +77,29 @@ export default function LatestUpdates() {
               key={i}
               className="update-card glass-card-light rounded-xl p-6"
             >
-              <p className="text-caption text-quantum mb-2">{update.date}</p>
               <p className="text-base text-stardust font-medium mb-1">
                 {update.title}
               </p>
               <p className="text-base text-silver leading-relaxed">
                 {update.description}
               </p>
+              {update.links && (
+                <div className="flex flex-wrap gap-x-2 mt-3">
+                  {update.links.map((link, index) => (
+                    <span key={link.href} className="inline-flex gap-x-2">
+                      {index > 0 && <span aria-hidden="true">·</span>}
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-quantum-light hover:underline"
+                      >
+                        {link.label}
+                      </a>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

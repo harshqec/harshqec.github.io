@@ -5,16 +5,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const researchCards = [
+const researchRows = [
   {
-    badge: 'ARXIV PREPRINT 2026',
+    badge: 'PUBLICATION',
     badgeColor: 'text-quantum',
-    title: 'Fault-tolerant syndrome extraction in [[n,1,3]] non-CSS codes',
+    title:
+      'Bare-ancilla fault-tolerant syndrome extraction: General extensions of distance-three codes and structural criteria for graph codes',
     summary:
-      'Investigates the construction of bare codes generated using measurements on graph states. Focuses on reducing hardware overhead for near-term fault-tolerant quantum error correction.',
+      'Accepted for publication in APS Open Science.',
     links: [
-      { label: 'Preprint →', href: 'https://arxiv.org/abs/2501.12072' },
-      { label: 'PDF →', href: 'https://arxiv.org/pdf/2501.12072' },
+      {
+        label: 'Journal announcement →',
+        href: 'https://journals.aps.org/apsos/accepted/10.1103/4mrw-3qj1',
+      },
+      { label: 'Read on arXiv →', href: 'https://arxiv.org/abs/2501.12072' },
     ],
   },
   {
@@ -27,14 +31,6 @@ const researchCards = [
       { label: 'Live Demo →', href: '/interactive-lab' },
       { label: 'Code →', href: 'https://github.com/harshqec/QuantumGraph-Analyzer' },
     ],
-  },
-  {
-    badge: 'ONGOING RESEARCH',
-    badgeColor: 'text-silver',
-    title: 'Bare Code Construction for Near-Term Hardware',
-    summary:
-      'Investigating minimal-overhead error correction schemes suitable for pre-threshold quantum devices using optimized measurement patterns on cluster states.',
-    status: 'Manuscript in Prep',
   },
 ]
 
@@ -76,51 +72,52 @@ export default function Research() {
         <h2 className="text-display-l text-stardust mb-4">
           Pushing the Boundaries of Quantum Error Correction
         </h2>
-        <p className="text-body-large text-stardust/70 mb-12 max-w-[640px]">
-          Current research interests and publications in measurement-based quantum computing.
-        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {researchCards.map((card, i) => (
+        <div className="flex flex-col gap-5">
+          {researchRows.map((row, i) => (
             <div
               key={i}
-              className="research-card glass-card rounded-2xl p-8 hover:-translate-y-1 hover:border-quantum/40 hover:shadow-[0_12px_40px_rgba(0,0,0,0.2)] transition-all duration-300"
+              className="research-card grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto] items-center gap-6 py-4"
             >
-              <p className={`text-caption ${card.badgeColor} mb-3`}>
-                {card.badge}
+              <p
+                className={`text-heading-m ${row.badgeColor} md:col-span-2`}
+              >
+                {row.badge}
               </p>
-              <h3 className="text-heading-m text-stardust mb-3">{card.title}</h3>
-              <p className="text-base text-stardust/75 leading-[1.7] mb-5">
-                {card.summary}
-              </p>
+              <div>
+                <h3
+                  className="text-base text-stardust mb-3"
+                >
+                  {row.title}
+                </h3>
+                <p className="text-base text-stardust/75 leading-[1.7]">
+                  {row.summary}
+                </p>
+              </div>
 
-              {'links' in card && card.links ? (
-                <div className="flex flex-wrap gap-4">
-                  {card.links.map((link) =>
-                    link.href.startsWith('/') ? (
-                      <Link
-                        key={link.label}
-                        to={link.href}
-                        className="text-sm text-quantum hover:underline transition-all"
-                      >
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        key={link.label}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-quantum hover:underline transition-all"
-                      >
-                        {link.label}
-                      </a>
-                    )
-                  )}
-                </div>
-              ) : (
-                <p className="text-caption text-silver italic">{card.status}</p>
-              )}
+              <div className="flex flex-wrap gap-4">
+                {row.links.map((link) =>
+                  link.href.startsWith('/') ? (
+                    <Link
+                      key={link.label}
+                      to={link.href}
+                      className="text-sm text-quantum hover:underline transition-all"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-quantum hover:underline transition-all"
+                    >
+                      {link.label}
+                    </a>
+                  )
+                )}
+              </div>
             </div>
           ))}
         </div>
