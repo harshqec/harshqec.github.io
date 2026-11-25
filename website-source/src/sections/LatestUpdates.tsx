@@ -40,9 +40,9 @@ export default function LatestUpdates() {
     const section = sectionRef.current
     if (!section) return
 
-    const cards = section.querySelectorAll('.update-card')
+    const items = section.querySelectorAll('.update-item')
     gsap.fromTo(
-      cards,
+      items,
       { opacity: 0, y: 30 },
       {
         opacity: 1,
@@ -66,20 +66,20 @@ export default function LatestUpdates() {
       className="relative bg-gradient-to-b from-space-dawn to-space-sky section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto">
-        <h2 className="text-heading-m text-stardust flex items-center gap-2.5 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-quantum inline-block" />
-          Latest Updates
-        </h2>
-
-        <div className="flex flex-col gap-5">
+        <div className="w-full glass-card-light !rounded-none p-4 mb-6">
+          <h2 className="text-heading-m text-stardust">
+            Latest Updates
+          </h2>
+        </div>
+        <ul className="list-disc space-y-5 pl-5 marker:text-quantum-light">
           {updates.map((update, i) => (
-            <div
-              key={i}
-              className="update-card glass-card-light rounded-xl p-6"
+            <li
+              key={update.title}
+              className={`update-item ${i < updates.length - 1 ? 'border-b border-stardust/10 pb-5' : ''}`}
             >
-              <p className="text-base text-stardust font-medium mb-1">
+              <h3 className="text-base text-stardust font-medium mb-1">
                 {update.title}
-              </p>
+              </h3>
               <p className="text-base text-silver leading-relaxed">
                 {update.description}
               </p>
@@ -92,7 +92,7 @@ export default function LatestUpdates() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-quantum-light hover:underline"
+                        className="text-black hover:underline"
                       >
                         {link.label}
                       </a>
@@ -100,9 +100,9 @@ export default function LatestUpdates() {
                   ))}
                 </div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

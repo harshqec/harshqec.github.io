@@ -3,11 +3,15 @@ import { ChevronDown } from 'lucide-react'
 import gsap from 'gsap'
 
 interface Particle {
-  x: number
-  y: number
-  size: number
-  speedY: number
-  speedX: number
+  startX: number
+  startY: number
+  targetX: number
+  targetY: number
+  travelDuration: number
+  width: number
+  height: number
+  shape: 'rectangle' | 'trapezoid'
+  inset: number
   opacity: number
   color: string
   offset: number
@@ -20,7 +24,6 @@ export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const scrollIndicatorRef = useRef<HTMLDivElement>(null)
-  const particlesRef = useRef<Particle[]>([])
   const animFrameRef = useRef<number>(0)
 
   // Slow down background video
@@ -72,42 +75,69 @@ export default function Hero() {
     // Initialize particles
     const colors = ['#6366F1', '#FFFFFF']
     const particles: Particle[] = []
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 110; i++) {
+      const fromLeft = Math.random() < 0.5
+      const shape = Math.random() < 0.3 ? 'trapezoid' : 'rectangle'
+      const width = 2.5 + Math.random() * 4.5
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: 1 + Math.random() * 1.5,
-        speedY: -(0.3 + Math.random() * 0.5),
-        speedX: 0.2 + Math.random() * 0.3,
+        startX: fromLeft
+          ? 0.05 + Math.random() * 0.2
+          : 0.75 + Math.random() * 0.2,
+        startY: 0.15 + Math.random() * 0.7,
+        targetX: 0.45 + Math.random() * 0.1,
+        targetY: 0.35 + Math.random() * 0.3,
+        travelDuration: fromLeft
+          ? 1.2 + Math.random() * 0.6
+          : 2 + Math.random() * 0.8,
+        width,
+        height: 3 + Math.random() * 5,
+        shape,
+        inset: width * (0.1 + Math.random() * 0.2),
         opacity: 0.15 + Math.random() * 0.3,
         color: colors[Math.floor(Math.random() * colors.length)],
         offset: Math.random() * Math.PI * 2,
       })
     }
-    particlesRef.current = particles
 
-    let time = 0
     const animate = () => {
-      time++
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const video = videoRef.current
+      const elapsed = video?.currentTime ?? 0
 
       particles.forEach((p) => {
-        p.y += p.speedY
-        p.x += Math.sin(time * 0.008 + p.offset) * p.speedX * 0.5
+        if (elapsed >= p.travelDuration) return
 
-        if (p.y < -5) {
-          p.y = canvas.height + 5
-          p.x = Math.random() * canvas.width
-        }
+        const progress = elapsed / p.travelDuration
+        const travelProgress = 1 - Math.pow(1 - progress, 3)
+        const fadeStart = p.travelDuration * 0.65
+        const fadeProgress =
+          elapsed <= fadeStart
+            ? 0
+            : (elapsed - fadeStart) / (p.travelDuration - fadeStart)
+        const opacity = p.opacity * (1 - fadeProgress)
+        const x =
+          canvas.width * (p.startX + (p.targetX - p.startX) * travelProgress)
+        const y =
+          canvas.height * (p.startY + (p.targetY - p.startY) * travelProgress)
 
         ctx.fillStyle =
           p.color === '#6366F1'
-            ? `rgba(99, 102, 241, ${p.opacity})`
-            : `rgba(255, 255, 255, ${p.opacity})`
+            ? `rgba(99, 102, 241, ${opacity})`
+            : `rgba(255, 255, 255, ${opacity})`
         ctx.save()
-        ctx.translate(p.x, p.y)
-        ctx.rotate(Math.sin(time * 0.01 + p.offset) * 0.25)
-        ctx.fillRect(-p.size, -p.size * 1.5, p.size * 2, p.size * 3)
+        ctx.translate(x, y)
+        ctx.rotate(Math.sin(elapsed * 8 + p.offset) * 0.25)
+        if (p.shape === 'trapezoid') {
+          ctx.beginPath()
+          ctx.moveTo(-p.width / 2 + p.inset, -p.height / 2)
+          ctx.lineTo(p.width / 2 - p.inset, -p.height / 2)
+          ctx.lineTo(p.width / 2, p.height / 2)
+          ctx.lineTo(-p.width / 2, p.height / 2)
+          ctx.closePath()
+          ctx.fill()
+        } else {
+          ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height)
+        }
         ctx.restore()
       })
 

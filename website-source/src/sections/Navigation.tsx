@@ -13,19 +13,48 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ]
 
+function scrollToHref(href: string) {
+  if (href === '#events') {
+    const firstItem = document.querySelector<HTMLElement>('#events .timeline-item')
+    const marker = document.querySelector<HTMLElement>('#events .timeline-progress-ball')
+    if (firstItem && marker) {
+      const markerCenter =
+        firstItem.getBoundingClientRect().top +
+        window.scrollY +
+        marker.offsetTop -
+        firstItem.offsetTop +
+        marker.offsetHeight / 2
+      window.scrollTo({
+        top: markerCenter - window.innerHeight / 2,
+        behavior: 'smooth',
+      })
+      return
+    }
+  }
+
+  const element = document.querySelector(href)
+  if (element) element.scrollIntoView({ behavior: 'smooth' })
+}
+
 export default function Navigation() {
-  const [_scrolled, setScrolled] = useState(false)
+  const [navVisible, setNavVisible] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const mobileRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    let showTimeout: ReturnType<typeof setTimeout> | undefined
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      setNavVisible(false)
+      if (showTimeout) clearTimeout(showTimeout)
+      showTimeout = setTimeout(() => setNavVisible(true), 250)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (showTimeout) clearTimeout(showTimeout)
+    }
   }, [])
 
   useEffect(() => {
@@ -69,10 +98,7 @@ export default function Navigation() {
     if (location.pathname === '/' && location.hash) {
       setActiveSection(location.hash.slice(1))
       setTimeout(() => {
-        const el = document.querySelector(location.hash)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
-        }
+        scrollToHref(location.hash)
       }, 100)
     }
   }, [location])
@@ -91,17 +117,14 @@ export default function Navigation() {
       return
     }
 
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+    scrollToHref(href)
   }
 
   return (
     <>
       <nav
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 bg-transparent border-b border-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-transform duration-300 bg-transparent border-b border-transparent ${navVisible ? 'translate-y-0' : '-translate-y-full pointer-events-none'}`}
       >
         <div className="max-w-[1200px] mx-auto h-full flex items-center justify-between page-padding">
           {/* Desktop Nav */}

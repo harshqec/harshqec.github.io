@@ -52,6 +52,9 @@ const events = [
 
 export default function Events() {
   const sectionRef = useRef<HTMLElement>(null)
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const markerRef = useRef<HTMLDivElement>(null)
+  const progressLineRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -76,6 +79,56 @@ export default function Events() {
     )
   }, [])
 
+  useEffect(() => {
+    const timeline = timelineRef.current
+    const marker = markerRef.current
+    const progressLine = progressLineRef.current
+    if (!timeline || !marker || !progressLine) return
+
+    const items = timeline.querySelectorAll<HTMLElement>('.timeline-item')
+    const firstItem = items[0]
+    const lastItem = items[items.length - 1]
+    if (!firstItem || !lastItem) return
+
+    let travelDistance = lastItem.offsetTop - firstItem.offsetTop
+    const markerCenterOffset =
+      marker.offsetTop - firstItem.offsetTop + marker.offsetHeight / 2
+    const updateMarker = (progress: number) => {
+      const distance = travelDistance * progress
+      const radius = marker.offsetWidth / 2
+      const rotation = (distance / radius) * (180 / Math.PI)
+      const activation = Math.min(1, progress * 10)
+      const lineLength = Math.max(0, markerCenterOffset + distance - 8)
+
+      gsap.set(progressLine, {
+        height: lineLength,
+        opacity: progress,
+        boxShadow: `0 0 ${8 * activation}px rgba(255, 45, 45, ${activation * 0.8})`,
+      })
+      gsap.set(marker, {
+        y: distance,
+        rotation,
+        scale: 1 + activation * 0.35,
+        backgroundColor: gsap.utils.interpolate('#6B5CE7', '#FACC15', activation),
+        boxShadow: `0 0 ${8 * activation}px rgba(250, 204, 21, ${activation})`,
+      })
+    }
+
+    const trigger = ScrollTrigger.create({
+      trigger: firstItem,
+      start: `top+=${markerCenterOffset} center`,
+      endTrigger: lastItem,
+      end: `top+=${markerCenterOffset} center`,
+      onUpdate: (self) => updateMarker(self.progress),
+      onRefresh: (self) => {
+        travelDistance = lastItem.offsetTop - firstItem.offsetTop
+        updateMarker(self.progress)
+      },
+    })
+
+    return () => trigger.kill()
+  }, [])
+
   return (
     <section
       id="events"
@@ -94,7 +147,7 @@ export default function Events() {
         </p>
 
         {/* Timeline */}
-        <div className="relative pl-8">
+        <div ref={timelineRef} className="relative pl-8">
           {/* Vertical line */}
           <div
             className="absolute left-[5px] top-2 bottom-2 w-[2px]"
@@ -102,14 +155,21 @@ export default function Events() {
               background: 'linear-gradient(180deg, #6B5CE7 0%, #9A9AA8 100%)',
             }}
           />
+          <div
+            ref={progressLineRef}
+            className="absolute left-[5px] top-2 z-[1] w-[2px] rounded-full bg-red-500"
+          />
+          <div
+            ref={markerRef}
+            className="timeline-progress-ball absolute left-0 top-1 z-10 w-3 h-3 rounded-full bg-quantum border-2 border-space"
+          >
+            <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 rounded-full bg-white/80" />
+          </div>
 
           <div className="flex flex-col gap-10">
             {events.map((event, i) => (
               <div key={i} className="timeline-item relative">
-                {/* Dot */}
-                <div className="absolute -left-8 top-1 w-3 h-3 rounded-full bg-quantum border-2 border-space" />
-
-                <p className="text-caption text-quantum mb-1">{event.date}</p>
+                <p className="text-caption text-black mb-1">{event.date}</p>
                 {event.link ? (
                   <Link to={event.link} className="hover:text-quantum transition-colors">
                     <h3 className="text-heading-m text-stardust mb-2">{event.title}</h3>
