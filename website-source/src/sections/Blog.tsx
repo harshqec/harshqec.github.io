@@ -5,20 +5,44 @@ export default function Blog() {
         <h2 className="text-display-l text-black mb-6">Thoughts & Writings</h2>
 
         <div className="mt-8 px-12 py-12 flex flex-col items-center max-w-[560px] w-full">
-          {/* Animated pencil icon */}
-          <div className="mb-6 relative w-16 h-16 flex items-center justify-center">
-            <span className="absolute inset-0 rounded-full bg-quantum/10 animate-ping opacity-60" />
+          <div className="mb-6 w-40 h-16 flex items-center justify-center">
             <svg
-              className="w-9 h-9 text-quantum relative z-10"
-              viewBox="0 0 24 24"
+              className="w-full h-full text-quantum"
+              viewBox="0 0 160 64"
               fill="none"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              aria-hidden="true"
             >
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              <path
+                d="M34 46H126"
+                pathLength="1"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray="1"
+                strokeDashoffset="1"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="1;0;0;1;1"
+                  keyTimes="0;0.45;0.5;0.95;1"
+                  dur="4s"
+                  repeatCount="indefinite"
+                />
+              </path>
+              <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <animateMotion
+                  path="M34 46L126 46L34 46"
+                  keyPoints="0;0.5;0.5;1;1"
+                  keyTimes="0;0.45;0.5;0.95;1"
+                  calcMode="linear"
+                  dur="4s"
+                  repeatCount="indefinite"
+                  rotate="auto"
+                />
+                <path d="M0 0L-5-5L-24-24L-29-19L-10 0L-5 5Z" fill="white" />
+                <path d="M-10 0L0 0L-5 5Z" fill="currentColor" />
+                <path d="M-24-24L-29-19" />
+              </g>
             </svg>
           </div>
 
