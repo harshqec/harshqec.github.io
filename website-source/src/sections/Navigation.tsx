@@ -66,6 +66,7 @@ export default function Navigation() {
   useEffect(() => {
     // If we just navigated to the home page with a hash, try to scroll to it
     if (location.pathname === '/' && location.hash) {
+      setActiveSection(location.hash.slice(1))
       setTimeout(() => {
         const el = document.querySelector(location.hash)
         if (el) {
@@ -77,6 +78,7 @@ export default function Navigation() {
 
   const scrollTo = (href: string) => {
     setMobileOpen(false)
+    setActiveSection(href.slice(1))
 
     if (location.pathname !== '/') {
       navigate('/' + href)

@@ -16,7 +16,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-space py-12 page-padding">
+    <footer className="bg-black py-12 page-padding">
       <div className="max-w-[1100px] mx-auto flex flex-col items-center gap-6">
         <div className="flex flex-wrap items-center justify-center gap-6">
           {footerLinks.map((link) => (

@@ -80,7 +80,7 @@ export default function Events() {
     <section
       id="events"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-mid to-space-soft-light section-padding page-padding"
+      className="bg-gradient-to-b from-space-mid to-space-dawn section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto">
         <p className="text-caption text-quantum tracking-[0.1em] mb-4">

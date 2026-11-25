@@ -1,11 +1,10 @@
 export default function Blog() {
   return (
-    <section id="blog" className="bg-gradient-to-b from-space to-space-dark section-padding page-padding">
+    <section id="blog" className="bg-gradient-to-b from-white to-black section-padding page-padding">
       <div className="max-w-[1100px] mx-auto flex flex-col items-center text-center py-16">
-        <p className="text-caption text-quantum mb-4">BLOG</p>
-        <h2 className="text-display-l text-stardust mb-6">Thoughts & Writings</h2>
+        <h2 className="text-display-l text-black mb-6">Thoughts & Writings</h2>
 
-        <div className="mt-10 glass-card rounded-3xl px-12 py-16 flex flex-col items-center max-w-[560px] w-full">
+        <div className="mt-8 px-12 py-12 flex flex-col items-center max-w-[560px] w-full">
           {/* Animated pencil icon */}
           <div className="mb-6 relative w-16 h-16 flex items-center justify-center">
             <span className="absolute inset-0 rounded-full bg-quantum/10 animate-ping opacity-60" />
@@ -24,7 +23,7 @@ export default function Blog() {
           </div>
 
           <h3 className="text-heading-m text-stardust mb-3">Coming Soon</h3>
-          <p className="text-base text-stardust/60 leading-relaxed">
+          <p className="text-base text-stardust leading-relaxed">
             I'll be sharing posts on quantum computing, research insights, and
             lessons from the lab. Stay tuned - something is brewing!
           </p>

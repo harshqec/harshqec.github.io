@@ -62,7 +62,7 @@ export default function Contact() {
     <section
       id="contact"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-dark to-black section-padding page-padding"
+      className="bg-black section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Left column */}

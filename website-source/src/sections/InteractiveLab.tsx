@@ -58,12 +58,9 @@ export default function InteractiveLab() {
     <section
       id="lab"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-light to-space section-padding page-padding"
+      className="bg-gradient-to-b from-space-sky to-white section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto flex flex-col items-center text-center">
-        <p className="lab-text-anim text-caption text-quantum mb-4">
-          INTERACTIVE LAB
-        </p>
         <h2 className="lab-text-anim text-display-l text-stardust mb-4">
           Quantum Graph-Code Analyzer
         </h2>
@@ -73,13 +70,7 @@ export default function InteractiveLab() {
           for hands-on experimentation with quantum topologies.
         </p>
 
-        {/* Feature card */}
-        <div className="lab-card w-full max-w-[720px] rounded-[20px] p-12 backdrop-blur-xl text-center"
-          style={{
-            background: 'linear-gradient(135deg, rgba(107,92,231,0.15) 0%, rgba(42,42,53,0.8) 100%)',
-            border: '1px solid rgba(107,92,231,0.3)',
-          }}
-        >
+        <div className="lab-card w-full max-w-[720px] text-center">
           <Atom size={48} className="text-quantum/80 mx-auto mb-6" />
           <h3 className="text-heading-m text-stardust mb-3">
             Generate, Visualize, Analyze
@@ -92,7 +83,7 @@ export default function InteractiveLab() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/interactive-lab"
-              className="inline-flex items-center px-7 py-3.5 bg-quantum text-stardust font-medium rounded-lg hover:bg-quantum-light hover:-translate-y-0.5 transition-all duration-250"
+              className="inline-flex items-center px-7 py-3.5 bg-quantum text-stardust font-medium rounded-none hover:bg-quantum-light hover:-translate-y-0.5 transition-all duration-250"
             >
               Launch Interactive Lab
             </Link>
@@ -100,7 +91,7 @@ export default function InteractiveLab() {
               href="https://github.com/harshqec/QuantumGraph-Analyzer"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-7 py-3.5 border border-stardust/20 text-stardust font-medium rounded-lg hover:border-quantum transition-all duration-250"
+              className="inline-flex items-center px-7 py-3.5 bg-quantum text-stardust font-medium rounded-none hover:bg-quantum-light hover:-translate-y-0.5 transition-all duration-250"
             >
               GitHub Source
             </a>
