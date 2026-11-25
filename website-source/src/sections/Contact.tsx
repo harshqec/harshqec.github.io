@@ -100,7 +100,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="w-10 h-10 rounded-full border border-nebula flex items-center justify-center text-stardust hover:text-quantum hover:border-quantum hover:-translate-y-0.5 transition-all duration-200"
+                className="w-10 h-10 rounded-full border border-nebula bg-white flex items-center justify-center text-black hover:text-quantum hover:border-quantum hover:-translate-y-0.5 transition-all duration-200"
               >
                 <Icon size={18} />
               </a>
@@ -110,7 +110,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="ORCID"
-              className="w-10 h-10 rounded-full border border-nebula flex items-center justify-center text-stardust hover:text-quantum hover:border-quantum hover:-translate-y-0.5 transition-all duration-200 font-body font-semibold text-xs"
+              className="w-10 h-10 rounded-full border border-nebula bg-white flex items-center justify-center text-black hover:text-quantum hover:border-quantum hover:-translate-y-0.5 transition-all duration-200 font-body font-semibold text-xs"
             >
               ID
             </a>

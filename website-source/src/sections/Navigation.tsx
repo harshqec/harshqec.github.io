@@ -101,40 +101,16 @@ export default function Navigation() {
         className="fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 bg-transparent border-b border-transparent"
       >
         <div className="max-w-[1200px] mx-auto h-full flex items-center justify-between page-padding">
-          {/* Logo */}
-          <button
-            onClick={() => scrollTo('#hero')}
-            className="font-display font-bold text-xl text-stardust tracking-tight bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 py-0 flex items-center"
-          >
-            {"Harsh".split('').map((char, i) => (
-              <span
-                key={i}
-                className="inline-block animate-microscope"
-                style={{ animationDelay: `${i * 0.4}s` }}
-              >
-                {char}
-              </span>
-            ))}
-          </button>
-
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-7">
+          <div className="hidden md:flex items-center gap-7 translate-y-3">
             <style>
               {`
                 @keyframes nav-wave {
                   0%, 100% { transform: translateY(0); }
                   50% { transform: translateY(-3px); }
                 }
-                @keyframes microscope {
-                  0%, 15% { transform: scale(1); }
-                  35% { transform: scale(1.4); }
-                  55%, 100% { transform: scale(1); }
-                }
                 .animate-nav-wave {
                   animation: nav-wave 4s ease-in-out infinite;
-                }
-                .animate-microscope {
-                  animation: microscope 6s ease-in-out infinite;
                 }
               `}
             </style>
@@ -144,7 +120,7 @@ export default function Navigation() {
                 onClick={() => scrollTo(link.href)}
                 className={`text-nav font-bold relative pb-1 transition-colors duration-200 bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 pt-0 animate-nav-wave ${activeSection === link.href.slice(1)
                   ? 'text-quantum-light'
-                  : 'text-stardust hover:text-white'
+                  : 'text-black hover:text-quantum'
                   }`}
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
@@ -162,7 +138,7 @@ export default function Navigation() {
                 href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-stardust/20 flex items-center justify-center text-stardust/70 hover:text-quantum hover:border-quantum transition-all duration-200"
+                className="w-9 h-9 rounded-full border border-stardust/20 bg-white flex items-center justify-center text-black hover:text-quantum hover:border-quantum transition-all duration-200"
                 aria-label="Google Scholar"
               >
                 <GraduationCap size={16} />
@@ -171,7 +147,7 @@ export default function Navigation() {
                 href="https://github.com/harshqec"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-stardust/20 flex items-center justify-center text-stardust/70 hover:text-quantum hover:border-quantum transition-all duration-200"
+                className="w-9 h-9 rounded-full border border-stardust/20 bg-white flex items-center justify-center text-black hover:text-quantum hover:border-quantum transition-all duration-200"
                 aria-label="GitHub"
               >
                 <Github size={16} />

@@ -25,7 +25,7 @@ export default function Hero() {
   // Slow down background video
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.playbackRate = 0.8
+      videoRef.current.playbackRate = 0.85
     }
   }, [])
 
@@ -204,16 +204,16 @@ export default function Hero() {
           <span className="title-char inline-block text-quantum">.</span>
         </h1>
 
-        <div className="hero-anim bg-black/10 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 shadow-2xl mb-8 w-full">
+        <div className="hero-anim bg-black/10 backdrop-blur-md p-6 sm:p-8 border border-white/10 shadow-2xl mb-8 w-full">
           {/* <p className="text-caption text-stardust font-bold tracking-[0.2em] mb-4">
             PHD STUDENT · QUANTUM COMPUTING · IISER BHOPAL
           </p> */}
 
-          <p className="text-body-large text-stardust/90 font-medium mb-4">
+          <p className="text-body-large text-black font-medium mb-4">
             Exploring quantum error correction through measurement-based quantum computing.
           </p>
 
-          <p className="text-base text-stardust/85 leading-[1.7]">
+          <p className="text-base text-black leading-[1.7]">
             Engineer with a passion for mathematics and music. Nearly two years at Infosys.
             M.Tech in Microelectronics. Currently pursuing a Ph.D. at IISER Bhopal.
           </p>
