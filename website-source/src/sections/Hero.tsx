@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import gsap from 'gsap'
 
@@ -14,6 +14,7 @@ interface Particle {
 }
 
 export default function Hero() {
+  const [scholarDark, setScholarDark] = useState(true)
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -26,6 +27,31 @@ export default function Hero() {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.85
+    }
+  }, [])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const updateScholarColor = () => {
+      const currentTime = video.currentTime
+      const duration = video.duration
+      const inWhiteSegment =
+        (currentTime >= 2 && currentTime < 6) ||
+        (Number.isFinite(duration) && duration > 0 && currentTime >= duration - 3)
+      setScholarDark(!inWhiteSegment)
+    }
+
+    video.addEventListener('timeupdate', updateScholarColor)
+    video.addEventListener('loadedmetadata', updateScholarColor)
+    video.addEventListener('seeked', updateScholarColor)
+    updateScholarColor()
+
+    return () => {
+      video.removeEventListener('timeupdate', updateScholarColor)
+      video.removeEventListener('loadedmetadata', updateScholarColor)
+      video.removeEventListener('seeked', updateScholarColor)
     }
   }, [])
 
@@ -74,13 +100,15 @@ export default function Hero() {
           p.x = Math.random() * canvas.width
         }
 
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fillStyle =
           p.color === '#6366F1'
             ? `rgba(99, 102, 241, ${p.opacity})`
             : `rgba(255, 255, 255, ${p.opacity})`
-        ctx.fill()
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        ctx.rotate(Math.sin(time * 0.01 + p.offset) * 0.25)
+        ctx.fillRect(-p.size, -p.size * 1.5, p.size * 2, p.size * 3)
+        ctx.restore()
       })
 
       animFrameRef.current = requestAnimationFrame(animate)
@@ -204,21 +232,6 @@ export default function Hero() {
           <span className="title-char inline-block text-quantum">.</span>
         </h1>
 
-        <div className="hero-anim bg-black/10 backdrop-blur-md p-6 sm:p-8 border border-white/10 shadow-2xl mb-8 w-full">
-          {/* <p className="text-caption text-stardust font-bold tracking-[0.2em] mb-4">
-            PHD STUDENT · QUANTUM COMPUTING · IISER BHOPAL
-          </p> */}
-
-          <p className="text-body-large text-black font-medium mb-4">
-            Exploring quantum error correction through measurement-based quantum computing.
-          </p>
-
-          <p className="text-base text-black leading-[1.7]">
-            Engineer with a passion for mathematics and music. Nearly two years at Infosys.
-            M.Tech in Microelectronics. Currently pursuing a Ph.D. at IISER Bhopal.
-          </p>
-        </div>
-
         <div className="hero-anim flex flex-wrap items-center justify-center gap-4 mt-8">
           <a
             href="https://drive.google.com/file/d/13V5qfZjASv-9JiqI2I3nbUdcPs2RYdRC/view?usp=sharing"
@@ -232,7 +245,7 @@ export default function Hero() {
             href="https://scholar.google.com/citations?hl=en&user=k3HNV8UAAAAJ"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-7 py-3.5 border border-stardust/30 text-stardust font-medium rounded-md hover:border-quantum hover:text-quantum-light transition-all duration-250"
+            className={`inline-flex items-center px-7 py-3.5 border font-medium rounded-md transition-colors duration-250 ${scholarDark ? 'border-black/30 text-black' : 'border-stardust/30 text-stardust'}`}
           >
             Google Scholar →
           </a>
