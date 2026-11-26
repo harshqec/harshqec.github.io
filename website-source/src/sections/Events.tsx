@@ -175,7 +175,7 @@ export default function Events() {
           <div className="flex flex-col gap-10">
             {events.map((event, i) => (
               <div key={i} className="timeline-item relative">
-                <p className="text-caption text-black mb-1">{event.date}</p>
+                <p className="text-caption text-red-500 mb-1">{event.date}</p>
                 {event.link ? (
                   <Link to={event.link} className="hover:text-quantum transition-colors">
                     <h3 className="text-heading-m text-stardust mb-2">{event.title}</h3>
