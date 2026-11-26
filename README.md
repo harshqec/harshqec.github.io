@@ -2,7 +2,7 @@
 
 The source code for [harshqec.github.io](https://harshqec.github.io/), a research portfolio about quantum computing, quantum error correction, and measurement-based quantum computing.
 
-<img src="website-source/public/images/headshot.webp" alt="Portrait of Harsh" width="180">
+<img src="https://raw.githubusercontent.com/harshqec/harshqec.github.io/source/website-source/public/images/headshot.webp" alt="Portrait of Harsh" width="180">
 
 ## Explore the website
 
