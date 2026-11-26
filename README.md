@@ -1,74 +1,105 @@
-# Harsh | PhD Student - Quantum Computing
+# Harsh's Quantum Computing Portfolio
 
-A professional, immersive research portfolio website showcasing work in Quantum Error Correction and Measurement-Based Quantum Computing.
+The source code for [harshqec.github.io](https://harshqec.github.io/), a research portfolio about quantum computing, quantum error correction, and measurement-based quantum computing.
 
-<img src="website-source/public/images/headshot.webp" alt="Website Preview" width="300">
+<img src="website-source/public/images/headshot.webp" alt="Portrait of Harsh" width="180">
 
-## 🌐 Live Website
-[harshqec.github.io](https://harshqec.github.io/)
+## Explore the website
 
-## ✨ Key Features
-- **Immersive Visuals**: High-definition architectural hero video background with dynamic glassmorphism overlays.
-- **Progressive Scroll Experience**: Sophisticated CSS-based background transitions that darken as the user scrolls, creating a sense of "diving deep" into the quantum realm.
-- **Dynamic Content**: Sections for Research Spotlight, Latest Lab Updates, Interactive Lab simulations, and Academic Events.
-- **Modern Tech Stack**: Built with high-performance tools for smooth animations and a premium feel.
-- **Responsive Design**: Fully optimized for mobile, tablet, and desktop viewing.
+Visitors can learn about Harsh's background and research, browse academic events and lab updates, read the blog, and try interactive quantum-computing simulations in the Lab section. The site is responsive and includes project and event detail pages.
 
-## 🛠 Tech Stack
-- **Framework**: [React](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [GSAP](https://greensock.com/gsap/) (GreenSock Animation Platform)
-- **Deployment**: [GitHub Pages](https://pages.github.com/)
+The portfolio brings these areas together:
 
-## 📁 Project Structure
-The repository is organized into two main branches:
+- Research highlights and academic updates
+- Events, workshops, and related detail pages
+- Blog posts and interactive quantum-lab simulations
+- A video-led landing page with animated, responsive navigation
 
-### `source` Branch (Current)
-Contains the raw source code and assets:
-- `website-source/`: The React + Vite project directory.
-  - `src/sections/`: Individual website sections (About, Research, Contact, etc.).
-  - `tailwind.config.js`: Custom color palette and design tokens.
-- `hero-video.mp4`: The main cinematic background video.
+## Technology
 
-### `main` Branch
-Contains the production-ready compiled code. This is what serves the live website.
+- React and TypeScript
+- Vite
+- Tailwind CSS
+- GSAP animations
+- GitHub Pages
 
-## 🚀 Local Development
+## Repository branches
 
-To run this project locally, follow these steps:
+This repository uses separate branches for source code and the live website:
 
-1. **Clone the repository**:
+- **`source`** contains the React/Vite project in `website-source/`. Make code and content changes on this branch.
+- **`main`** contains the built static website served by GitHub Pages. Do not edit the deployed files by hand; regenerate them from `source`.
+
+## Project layout
+
+```text
+website-source/
+  public/       Static assets copied into the production build
+  src/
+    sections/   Main portfolio sections
+    pages/      Main page and event/lab detail pages
+  package.json
+  vite.config.ts
+```
+
+## Run locally
+
+Clone the repository and install the website dependencies:
+
+```bash
+git clone --branch source https://github.com/harshqec/harshqec.github.io.git
+cd harshqec.github.io/website-source
+npm ci
+npm run dev
+```
+
+Vite prints the local development URL in the terminal. To check a production build, run:
+
+```bash
+npm run build
+```
+
+This runs the TypeScript build and creates the static site in `website-source/dist/`. You can optionally run `npm run lint` to check the source.
+
+## Change and commit workflow
+
+1. Make and test changes on the `source` branch.
+2. Stage only the files for the change and create a short, imperative commit message:
+
    ```bash
-   git clone -b source https://github.com/harshqec/harshqec.github.io.git
+   git add website-source/src/sections/Events.tsx
+   git commit -m "Update events section"
    ```
 
-2. **Navigate to the source folder**:
+   Existing commits use concise messages such as `Fix section viewport and event marker tracking`. Keep source changes on `source`; do not commit generated `dist/` output there.
+3. Push the source changes:
+
    ```bash
-   cd website-source
+   git push origin source
    ```
 
-3. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+## Build and publish to `main`
 
-4. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   The site will be available at `http://localhost:5173`.
+After the source change is ready, build it and publish the generated files to the root of `main`. Run these commands from the repository root on `source`:
 
-## 📦 Deployment Process
-Deployment follows a "Source-to-Main" strategy:
-1. Make changes in the `source` branch.
-2. Build the production bundle: `npm run build`.
-3. The contents of the `dist/` folder are then pushed to the root of the `main` branch to update the live site.
+```bash
+git fetch origin
+git worktree add --detach ../harshqec-pages origin/main
 
-## 👤 Contact
-**Harsh**  
-PhD Student @ IISER Bhopal  
-Quantum Computing | Measurement-Based QC | Error Correction
+cd website-source
+npm ci
+npm run build
+cd ..
 
----
-*Built with precision and a passion for the quantum world.*
+rsync -a --delete --exclude='.git' website-source/dist/ ../harshqec-pages/
+git -C ../harshqec-pages add -A
+git -C ../harshqec-pages commit -m "Deploy <short description>"
+git -C ../harshqec-pages push origin HEAD:main
+git worktree remove ../harshqec-pages
+```
+
+The worktree keeps the deployment checkout separate from the source branch. `rsync` mirrors the build output (including removing obsolete hashed assets) while excluding Git metadata. If the build produces no file changes, there is nothing to commit or push to `main`.
+
+## About Harsh
+
+Harsh is a PhD student at IISER Bhopal working in quantum computing, including quantum error correction and measurement-based quantum computing. The website is a public overview of his research interests, academic activities, and projects.
