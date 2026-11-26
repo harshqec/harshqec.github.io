@@ -80,20 +80,21 @@ export default function Events() {
   }, [])
 
   useEffect(() => {
+    const section = sectionRef.current
     const timeline = timelineRef.current
     const marker = markerRef.current
     const progressLine = progressLineRef.current
-    if (!timeline || !marker || !progressLine) return
+    if (!section || !timeline || !marker || !progressLine) return
 
     const items = timeline.querySelectorAll<HTMLElement>('.timeline-item')
     const firstItem = items[0]
     const lastItem = items[items.length - 1]
     if (!firstItem || !lastItem) return
 
-    let travelDistance = lastItem.offsetTop - firstItem.offsetTop
     const markerCenterOffset =
       marker.offsetTop - firstItem.offsetTop + marker.offsetHeight / 2
     const updateMarker = (progress: number) => {
+      const travelDistance = lastItem.offsetTop - firstItem.offsetTop
       const distance = travelDistance * progress
       const radius = marker.offsetWidth / 2
       const rotation = (distance / radius) * (180 / Math.PI)
@@ -114,19 +115,24 @@ export default function Events() {
       })
     }
 
-    const trigger = ScrollTrigger.create({
-      trigger: firstItem,
-      start: `top+=${markerCenterOffset} center`,
-      endTrigger: lastItem,
-      end: `top+=${markerCenterOffset} center`,
-      onUpdate: (self) => updateMarker(self.progress),
-      onRefresh: (self) => {
-        travelDistance = lastItem.offsetTop - firstItem.offsetTop
-        updateMarker(self.progress)
-      },
-    })
+    const handleScroll = () => {
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY
+      const lastItemTop = lastItem.getBoundingClientRect().top + window.scrollY
+      const scrollRange = lastItemTop - sectionTop
+      const progress = scrollRange > 0
+        ? Math.max(0, Math.min(1, ((window.scrollY - sectionTop) / scrollRange) * 1.3))
+        : 0
+      updateMarker(progress)
+    }
 
-    return () => trigger.kill()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
   }, [])
 
   return (

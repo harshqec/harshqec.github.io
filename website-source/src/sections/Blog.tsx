@@ -1,6 +1,6 @@
 export default function Blog() {
   return (
-    <section id="blog" className="bg-gradient-to-b from-white to-black section-padding page-padding">
+    <section id="blog" className="min-h-screen bg-gradient-to-b from-white to-black section-padding page-padding">
       <div className="max-w-[1100px] mx-auto flex flex-col items-center text-center py-16">
         <h2 className="text-display-l text-black mb-6">Thoughts & Writings</h2>
 

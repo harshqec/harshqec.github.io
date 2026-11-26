@@ -63,7 +63,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-sky to-space-mid section-padding page-padding"
+      className="min-h-screen bg-gradient-to-b from-space-sky to-space-mid section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] gap-12 md:gap-6 items-center">
         {/* Text column */}

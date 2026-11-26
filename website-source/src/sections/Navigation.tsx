@@ -14,24 +14,6 @@ const navLinks = [
 ]
 
 function scrollToHref(href: string) {
-  if (href === '#events') {
-    const firstItem = document.querySelector<HTMLElement>('#events .timeline-item')
-    const marker = document.querySelector<HTMLElement>('#events .timeline-progress-ball')
-    if (firstItem && marker) {
-      const markerCenter =
-        firstItem.getBoundingClientRect().top +
-        window.scrollY +
-        marker.offsetTop -
-        firstItem.offsetTop +
-        marker.offsetHeight / 2
-      window.scrollTo({
-        top: markerCenter - window.innerHeight / 2,
-        behavior: 'smooth',
-      })
-      return
-    }
-  }
-
   const element = document.querySelector(href)
   if (element) element.scrollIntoView({ behavior: 'smooth' })
 }

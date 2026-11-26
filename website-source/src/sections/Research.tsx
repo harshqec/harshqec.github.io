@@ -65,7 +65,7 @@ export default function Research() {
     <section
       id="research"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-dawn to-space-sky section-padding page-padding"
+      className="min-h-screen bg-gradient-to-b from-space-dawn to-space-sky section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto">
         <p className="text-caption text-quantum mb-4">RESEARCH SPOTLIGHT</p>

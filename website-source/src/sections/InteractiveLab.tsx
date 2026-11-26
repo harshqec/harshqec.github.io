@@ -58,7 +58,7 @@ export default function InteractiveLab() {
     <section
       id="lab"
       ref={sectionRef}
-      className="bg-gradient-to-b from-space-sky to-white section-padding page-padding"
+      className="min-h-screen bg-gradient-to-b from-space-sky to-white section-padding page-padding"
     >
       <div className="max-w-[1100px] mx-auto flex flex-col items-center text-center">
         <h2 className="lab-text-anim text-display-l text-stardust mb-4">
