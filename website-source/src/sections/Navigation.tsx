@@ -126,21 +126,12 @@ export default function Navigation() {
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
-                className={`text-nav font-bold relative pb-1 transition-colors duration-200 bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 pt-0 animate-nav-wave ${activeSection === 'events' || activeSection === 'about'
-                  ? link.href.slice(1) === activeSection
-                      ? 'text-red-500'
-                      : 'text-stardust'
-                  : activeSection === link.href.slice(1)
-                    ? 'text-quantum-light'
-                    : activeSection === 'contact'
-                      ? 'text-stardust'
-                      : 'text-black'
-                  }`}
+                className={`text-nav font-bold relative pb-1 transition-colors duration-200 bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 pt-0 animate-nav-wave ${activeSection === link.href.slice(1) ? 'text-red-500' : activeSection === 'about' || activeSection === 'events' || activeSection === 'contact' ? 'text-stardust' : 'text-black'}`}
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
                 {link.label}
                 <span
-                className={`absolute bottom-0 left-0 h-[2px] ${(activeSection === 'about' || activeSection === 'events') && link.href.slice(1) === activeSection ? 'bg-red-500' : activeSection === 'about' || activeSection === 'events' ? 'bg-black' : 'bg-quantum'} transition-transform duration-250 origin-left ${activeSection === link.href.slice(1) ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+                className={`absolute bottom-0 left-0 h-[2px] ${activeSection === link.href.slice(1) ? 'bg-red-500' : activeSection === 'about' || activeSection === 'events' ? 'bg-black' : 'bg-quantum'} transition-transform duration-250 origin-left ${activeSection === link.href.slice(1) ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
                     }`}
                 />
               </button>
@@ -197,7 +188,7 @@ export default function Navigation() {
             <button
               key={link.href}
               onClick={() => scrollTo(link.href)}
-              className="mobile-link text-heading-m text-stardust hover:text-quantum transition-colors duration-200 bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 py-0"
+              className={`mobile-link text-heading-m ${activeSection === link.href.slice(1) ? 'text-red-500 hover:text-red-500' : 'text-stardust hover:text-quantum'} transition-colors duration-200 bg-transparent border-none shadow-none hover:bg-transparent hover:shadow-none hover:translate-y-0 px-0 py-0`}
             >
               {link.label}
             </button>
