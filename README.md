@@ -91,14 +91,14 @@ npm ci
 npm run build
 cd ..
 
-rsync -a --delete --exclude='.git' website-source/dist/ ../harshqec-pages/
+rsync -a --delete --exclude='.git' --exclude='README.md' website-source/dist/ ../harshqec-pages/
 git -C ../harshqec-pages add -A
 git -C ../harshqec-pages commit -m "Deploy <short description>"
 git -C ../harshqec-pages push origin HEAD:main
 git worktree remove ../harshqec-pages
 ```
 
-The worktree keeps the deployment checkout separate from the source branch. `rsync` mirrors the build output (including removing obsolete hashed assets) while excluding Git metadata. If the build produces no file changes, there is nothing to commit or push to `main`.
+The worktree keeps the deployment checkout separate from the source branch. `rsync` mirrors the build output (including removing obsolete hashed assets) while preserving the `main` branch's README and Git metadata. If the build produces no file changes, there is nothing to commit or push to `main`.
 
 ## About Harsh
 
